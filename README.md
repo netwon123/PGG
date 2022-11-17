@@ -1,0 +1,2 @@
+# PGG
+Pig graph pangenome
