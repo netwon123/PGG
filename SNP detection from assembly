@@ -1,0 +1,7 @@
+#鉴定assembly的snp,
+delta-filter -1 Asian_wild_boar.delta > Asian_wild_boar_filtered.delta
+show-snps -C -H -I -r -T -l Asian_wild_boar_filtered.delta > Asian_wild_boar.snp
+https://www.jianshu.com/p/3c159ab11d5b
+
+#转换为vcf
+#提取第11、1、2、3列
