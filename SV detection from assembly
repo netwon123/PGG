@@ -1,1 +1,23 @@
+#nucmer+Assemblytics
+ls ../accession_genome/*fa | while read id;
+do
+file=$(basename $id )
+sample=${file%%.*}
+echo $file $sample
+nucmer --maxmatch -l 100 -c 500 -t 16 --load ../Duroc/duroc_db ../Duroc/Duroc.fna $id --prefix=${sample}
+/public/home/baoqi/assembly_pacbio/soft/Assemblytics-1.2.1/scripts/Assemblytics ${sample}.delta ${sample} 10000 50 1000000
+done
+
+
+
+
+#mumandco
+ls ../accession_genome/*fa | while read id;
+do
+file=$(basename $id )
+sample=${file%%.*}
+echo $file $sample
+bash /public/home/baoqi/software/MUMandCo-master/mumandco_v3.8.sh -r ../Duroc/Duroc.fna -q $id -g 2683172905 -o ${sample}
+done
+
 
