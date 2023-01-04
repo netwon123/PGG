@@ -1,0 +1,5 @@
+#creat envirment for SV detection
+conda create -n snakemake_env python snakemake && conda activate snakemake_env
+
+#SV detection softwares
+conda install sniffles=2.0 
