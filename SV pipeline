@@ -8,7 +8,7 @@ conda create -n snakemake_env python snakemake && conda activate snakemake_env
 #Sniffles2=2.0.3
 wget https://codeload.github.com/smolkmo/Sniffles2.2/zip/refs/tags/v2.0.3  
 
-#cuteSV
+#cuteSV= 1.0.13
 pip install cuteSV -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 #pbsv=2.8.0
