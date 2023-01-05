@@ -1,7 +1,7 @@
 #creat envirment for SV detection
 conda create -n snakemake_env python snakemake && conda activate snakemake_env
 
-#snakemake-7.19.1
+#snakemake=7.7.0
 #python=3.8.15
 
 #SV detection softwares
