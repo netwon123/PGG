@@ -2,7 +2,11 @@
 conda create -n snakemake_env python snakemake && conda activate snakemake_env
 
 #snakemake-7.19.1
-#python=3.11.0
+#python=3.8.15
 
 #SV detection softwares
-conda install sniffles=2.0 
+#Sniffles2
+wget https://codeload.github.com/smolkmo/Sniffles2.2/zip/refs/tags/v2.0.3  
+
+#cuteSV
+pip install cuteSV -i https://pypi.tuna.tsinghua.edu.cn/simple
