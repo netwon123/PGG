@@ -19,3 +19,5 @@ pip install svim -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 #nanosv=1.2.4
 pip install nanosv -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+#samtools=1.9
