@@ -1,11 +1,11 @@
 #creat envirment for SV detection
 mamba create -c conda-forge -c bioconda -n snakemake_env python snakemake && conda activate /public/home/baoqi/micromamba/envs/snakemake
 
-#snakemake=7.7.0
-#python=3.8.15
+#snakemake=7.19.1
+#python=3.11.0
 
 #SV detection softwares
-#Sniffles2=2.0.3
+#Sniffles2=2.0.7
 wget https://codeload.github.com/smolkmo/Sniffles2.2/zip/refs/tags/v2.0.3  
 
 #cuteSV= 1.0.13
