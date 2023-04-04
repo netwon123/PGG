@@ -1,0 +1,9 @@
+#!/bin/bash
+ls ./*bam | while read id;
+do
+  file=$(basename $id )
+  sample=${file%%.*}
+  sniffles -t 16 --min_support 5 --min_length 50 --input $id --snf $sample.snf
+done
+ls *snf > snf_files_list.tsv
+sniffles -t 16 --input snf_files_list.tsv --vcf TT_pop.vcf
