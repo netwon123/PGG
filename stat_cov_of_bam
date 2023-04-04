@@ -1,0 +1,3 @@
+#samtools depth TT-FKDO210407416-1A-3.sorted.bam > 3.depth
+sort -k1,1 -k2,2n 3.depth > sorted_coverage.txt
+awk '{c++;s+=$3}END{print "Average coverage: "s/c}' sorted_coverage.txt > cov.txt
