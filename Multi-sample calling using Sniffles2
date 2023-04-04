@@ -1,3 +1,18 @@
+
+#aligned fastq to ref
+ls ./*fastq.gz | while read id;
+do
+  file=$(basename $id )
+  sample=${file%%.*}
+ngmlr -t 24 -r ~/sscrofa_genome/GCF_000003025.6_Sscrofa11.1_genomic.fna -q $id -x ont \
+| samtools view -@ 24 -bS \
+| samtools sort -@ 24 -o $sample.sorted.bam
+
+
+
+
+
+
 #!/bin/bash
 ls ./*bam | while read id;
 do
