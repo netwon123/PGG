@@ -1,0 +1,9 @@
+#calculated missingness
+vcftools --vcf TT_merged2.vcf --missing-indv
+
+#compared 'pop_merge' and 'SURVIOR merge' eg-TT: 13 samples
+
+for i in {3..13}
+do
+    SURVIVOR merge samplefile 1000 ${i} 1 1 0 50 TT_comparemerge${i}.vcf
+done
