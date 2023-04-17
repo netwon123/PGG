@@ -1,2 +1,1 @@
-# PGG
-Pig graph pangenome
+using hifiasm
