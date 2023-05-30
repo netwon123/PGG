@@ -33,6 +33,10 @@ do
 done
 #2.get the location of all type
 python extract_SVLEN.py
+bedtools flank -i filted_pop.bed -g genome -b 2500  > masked_regions.bed
+bedtools sort -i  masked_regions.bed > masked_regions_sort.bed
+bedtools merge -i  masked_regions_sort.bed > masked_regions_over.bed
+SURVIVOR filter
 
 
 ls *snf > snf_files_list.tsv
