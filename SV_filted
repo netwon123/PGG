@@ -33,3 +33,6 @@ done
 
 ls *snf > snf_files_list.tsv
 sniffles -t 16 --input snf_files_list.tsv --vcf pop.vcf --allow-overwrite
+
+#step1 remove chrY, chrMT, non-chr scaffold
+grep -Ev "^NW|^NC_010462\.3|^NC_000845\.1" pop.vcf > filtered_pop.vcf
