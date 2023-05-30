@@ -13,6 +13,7 @@ done
 
 
 #-----------------------------------pop-filted
+#1.get the simulated SV of ref
 #samtools view WNH1.sam.sorted.bam | SURVIVOR scanreads 1000 WNH1_error_profile.txt
 SURVIVOR simreads /public/home/baoqi/assembly_pacbio/Duroc/Duroc.fa WNH1_error_profile.txt 20 WNH1_sim_20x_2
 ls ./*fa | while read id;
@@ -30,6 +31,9 @@ do
   samtools index $id
   sniffles -t 16 --minsupport auto --minsvlen 50 --input $id --snf $sample.snf
 done
+#2.get the location of all type
+python extract_SVLEN.py
+
 
 ls *snf > snf_files_list.tsv
 sniffles -t 16 --input snf_files_list.tsv --vcf pop.vcf --allow-overwrite
