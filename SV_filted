@@ -36,7 +36,7 @@ python extract_SVLEN.py
 bedtools flank -i filted_pop.bed -g genome -b 2500  > masked_regions.bed
 bedtools sort -i  masked_regions.bed > masked_regions_sort.bed
 bedtools merge -i  masked_regions_sort.bed > masked_regions_over.bed
-SURVIVOR filter
+SURVIVOR filter filtered_pop.vcf masked_regions_over.bed 50 100000 0.05 -1 output.vcf
 
 
 ls *snf > snf_files_list.tsv
