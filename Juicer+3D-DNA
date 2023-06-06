@@ -17,3 +17,7 @@ need to change the memory parameter in /software/3d-dna/visualize/juicebox_tools
 set -e
 java -Xms512G -Xmx512G -jar `dirname $0`/juicebox_tools.jar $*
                                                         '''
+                                                        
+#https://github.com/aidenlab/3d-dna/issues/110
+awk -f /public/home/baoqi/software/3d-dna/utils/wrap-fasta-sequence.awk ./purged.fa > wrapped.fasta #speed the progress
+/public/home/baoqi/software/3d-dna/run-asm-pipeline-post-review.sh --sort-output  -r purged.0.review.assembly wrapped.fasta ~/LDR/purge_ldr/juicer/work/aligned/merged_nodups.txt
