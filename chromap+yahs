@@ -1,0 +1,8 @@
+#chromap --preset hic -r /public/home/baoqi/verkko/hifism/3ddna/juicer/references/t2t.asm.hic.p_ctg.fasta -x /public/home/baoqi/verkko/hifism/3ddna/juicer/references/t2t.asm.hic.p_ctg.fasta.index --remove-pcr-duplicates -1 /public/home/baoqi/verkko/hifism/3ddna/juicer/work/fastq/hic_R1.fastq.gz -2 /public/home/baoqi/verkko/hifism/3ddna/juicer/work/fastq/hic_R2.fastq.gz  --SAM -o aligned.sam -t 56
+#samtools view -bh aligned.sam | samtools sort -@ 56 -n > aligned.bam
+#yahs /public/home/baoqi/verkko/hifism/3ddna/juicer/references/t2t.asm.hic.p_ctg.fasta aligned.bam
+#bash juicebox2.sh
+#juicer pre -a -o out_JBAT yahs.out.bin yahs.out_scaffolds_final.agp /public/home/baoqi/verkko/hifism/3ddna/juicer/references/t2t.asm.hic.p_ctg.fasta.fai >out_JBAT.log 2>&1
+#java -Xmx512G -jar ~/verkko/hifism/3ddna/juicer/scripts/common/juicer_tools.2.20.00.jar pre out_JBAT.txt out_JBAT.hic <(echo "assembly 1437666274")
+
+juicer post -o out_JBAT out_JBAT.assembly out_JBAT.liftover.agp ~/verkko/hifism/3ddna/juicer/references/t2t.asm.hic.p_ctg.fasta
