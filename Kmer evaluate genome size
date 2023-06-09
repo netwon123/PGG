@@ -1,0 +1,22 @@
+jellyfish count -m 21 -s 100M -t 10 -C reads.fasta
+
+-m使用的k-mer的长度。如果基因组大小为G，则k-mer长度选择为: k ~= log(200G)/log(4)；
+-s Hash 的大小，最好设置的值大于总的独特的(distinct)k-mer数,这样生成的文件只有一个。若该值不够大，则会生成多个hash文件，以数字区分文件名。如果基因组大小为G，每个reads有一个错误，总共有n条reads，则该值可以设置为[(G + n)/0.8],该值识别M 和 G；
+-t |--threads=<num> default: 1 使用的CPU线程数；
+-o |--output=<string> default:mer_counts 输出的结果文件前缀；
+-c |--counter-len=<num> default:7， k-mer的计数结果所占的比特数,默认支持的最大数字是2^7=128。对于基因组测序覆盖度为N，则要使设置的该值要大于N。该值越大，消耗内存越大；
+
+jellyfish histo -t 10 sample.jf > sample.histo 
+
+
+
+/path/R/3.1.1/bin/Rscript   /path/genomescope2.0/genomescope.R 
+  -i /home/liuliu/test/Survey//kmer_21/21mer.out.hist \
+  -o /home/liuliu/test/Survey/kmer_21/output_p3  \
+  -k 21  \
+  -p 3  \
+  -n 21.p3 \
+  
+  
+  #基因组评估过大，则要调小kmer值
+  #hifiasm输出log文件里也有kmer分布图和推断的kmer，实测预测结果还是比较准
