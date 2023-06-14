@@ -13,7 +13,12 @@ ls ./*bam | while read id;
 do
   file=$(basename $id )
   sample=${file%%.*}
-  sniffles -t 16 --minsupport auto --minsvlen 50 --input $id --snf $sample.snf
+
+  sniffles -t 16 --minsupport auto --minsvlen 50 --qc-stdev True --detect-large-ins True --sample-id $sample --input $id --snf $sample.snf
 done
+
+
 ls *snf > snf_files_list.tsv
-sniffles -t 16 --input snf_files_list.tsv --vcf TT_pop.vcf --allow-overwrite
+sniffles -t 8 --input snf_files_list.tsv --vcf pop_pass.vcf --allow-overwrite --symbolic --combine-low-confidence 0.2 --combine-low-confidence-abs 2 --combine-null-min-coverage 5
+
+sniffles -t 8 --input snf_files_list.tsv --vcf pop_all.vcf --allow-overwrite --symbolic --combine-low-confidence 0.2 --combine-low-confidence-abs 2 --combine-null-min-coverage 5 --combine-output-filtered
