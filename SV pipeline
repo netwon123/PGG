@@ -8,17 +8,16 @@ mamba create -c conda-forge -c bioconda -n snakemake_env python snakemake && con
 #Sniffles2=2.0.7
 wget https://codeload.github.com/smolkmo/Sniffles2.2/zip/refs/tags/v2.0.3  
 
-#cuteSV=2.0.2
+#cuteSV=2.0.3
 pip install cuteSV -i https://pypi.tuna.tsinghua.edu.cn/simple
 
-#pbsv=2.8.0
+#pbsv=2.9.0
 conda install -c bioconda pbsv
 
 #svim=2.0.0
 pip install svim -i https://pypi.tuna.tsinghua.edu.cn/simple
 
-#nanosv=1.2.4
-pip install nanosv -i https://pypi.tuna.tsinghua.edu.cn/simple
+
 
 #samtools=1.9
 #bcftools=1.13
