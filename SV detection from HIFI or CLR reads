@@ -1,7 +1,9 @@
 #----------pbsv---------
 #hifi
+pbsv discover --hifi $id $sample.svsig.gz
 pbsv call --hifi -m 50 -j 56 ~/assembly/Duroc/Duroc.fa $id $sample.pbsv.vcf
 #CLR
+pbsv discover $id $sample.svsig.gz
 pbsv call -m 50 -j 56 ~/assembly/Duroc/Duroc.fa $id $sample.pbsv.vcf
 
 #----------svim---------
