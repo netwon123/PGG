@@ -1,3 +1,13 @@
+vcftools \
+--minDP 2 \
+--out pca_meanDP2_miss08_maf005.vcf \
+--vcf ../pop_filted2.vcf \
+--recode --recode-INFO-all \
+--max-missing 0.8 \
+--maf 0.05
+
+
+
 #pca
 ~/software/plink --vcf ../pop_filted2.vcf --recode --out testacc_qc --const-fid --allow-extra-chr --threads 20
 ~/software/plink --allow-extra-chr --file testacc_qc --noweb --make-bed --out testacc_qc --threads 20
