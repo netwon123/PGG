@@ -1,0 +1,2 @@
+bcftools query -l ../pop_filted2.vcf >ind.list
+bcftools reheader -s sample.file ../pop_filted2.vcf -o new.sample.vcf
