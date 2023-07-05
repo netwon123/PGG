@@ -42,3 +42,5 @@ cuteSV $id  ~/assembly/Duroc/Duroc.fa $sample.cutesv.vcf ./tmp_dir -t 56 --min_s
 	--diff_ratio_merging_DEL	0.3
 > For force calling:
 	--min_mapq 			10
+
+SURVIVOR merge aw.txt 1000 2 1 1 0 50 aw_merge.vcf
