@@ -1,7 +1,17 @@
-#鉴定assembly的snp,
-delta-filter -1 Asian_wild_boar.delta > Asian_wild_boar_filtered.delta
-show-snps -C -H -I -r -T -l Asian_wild_boar_filtered.delta > Asian_wild_boar.snp
-https://www.jianshu.com/p/3c159ab11d5b
+#including indel (single base level)
+ls ./*filter | while read id;
+do
+  file=$(basename $id )
+  sample=${file%%.*}
+  echo $file $sample
+  delta-filter -1 -q -r $id > $sample.filter
+  show-snps -THC  $sample.filter >  $sample.var.txt
+done
 
-#转换为vcf
-#提取第11、1、2、3列
+ls ./*txt | while read id;
+do
+file=$(basename $id )
+sample=${file%%.*}
+echo $file $sample
+Rscript nucmer2vcf.R $id NW_018085315.1 ~/assembly/Duroc/Duroc.fa 3.1 $sample.vcf
+done
