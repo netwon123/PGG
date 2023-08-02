@@ -1,7 +1,0 @@
-#pair-SV concordance between two 
-
-#assembly
-ls ./*_sort.vcf | while read id; do ~/software/tabix-0.2.6/bgzip $id  ; done
-ls ./*gz | while read id; do ~/software/tabix-0.2.6/tabix -p vcf $id ; done
-
-truvari bench --passonly -p 0.00 -r 1000 --sizemax 100050 -c hifi_assembly/AW_both_sort.vcf.gz -b ont/AW_pop_pass.vcf.gz -o aw_output_dir2/
