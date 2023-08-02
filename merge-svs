@@ -1,1 +1,5 @@
-
+#for each sv call from different tools
+ls ./*vcf | while read i; do grep -Ev "^NW|^NC_010462\.3|^NC_000845\.1" $i > ${i}.filted.vcf; done 
+ls ./*filted.vcf | while read i; do python filted_ins.py $i ${i}.filtedins.vcf; done
+ls ./*filtedins.vcf | while read id; awk '/^#/||$7=="PASS"' $id > ${id}_pass.vcf
+SURVIVOR merge tt.txt 1000 2 1 1 0 50 TT_merge_5tools.vcf
