@@ -43,5 +43,9 @@ ls *snf > snf_files_list.tsv
 sniffles -t 16 --input snf_files_list.tsv --vcf pop.vcf --allow-overwrite
 
 #step1 remove chrY, chrMT, non-chr scaffold
-grep -Ev "^NW|^NC_010462\.3|^NC_000845\.1" pop_pass_rename.vcf > pop_pass_rename_step1.vcf
+#grep -Ev "^NW|^NC_010462\.3|^NC_000845\.1" pop_pass_rename.vcf > pop_pass_rename_step1.vcf
+ls ./*filted.vcf | while read i; do python filted_ins.py $i ${i}.filtedins.vcf; done
+ls ./*vcf | while read i; do grep -Ev "^NW|^NC_010462\.3|^NC_000845\.1" $i > ${i}.filted.vcf; done
+
 vcftools --vcf pop_pass_rename_step1.vcf --exclude-positions masked_regions_over.bed --recode --recode-INFO-all --out pop_pass_rename_step2
+
