@@ -1,5 +1,12 @@
-#for each sv call from different tools
+#filted for each sv call from 4 tools (cutesv,pbsv,sniffle,debreak)
+ls ./*vcf | while read i; do grep -Ev "^NW|^NC_010462\.3|^NC_000845\.1" $i > ${i}.filted.vcf; done 
+ls ./*filted.vcf | while read i; do python filted_ins.py $i ${i}.filtedins.vcf; done
+python filted_idel_len.py $id ${id}.indel_pass.vcf ## indel len < 100Kb; grep "PASS"
+
+#filted for Assemblytics, whithout svlen filtering
 ls ./*vcf | while read i; do grep -Ev "^NW|^NC_010462\.3|^NC_000845\.1" $i > ${i}.filted.vcf; done 
 ls ./*filted.vcf | while read i; do python filted_ins.py $i ${i}.filtedins.vcf; done
 ls ./*filtedins.vcf | while read id; do awk '/^#/||$7=="PASS"' $id > ${id}_pass.vcf;done
+
+#merge sv from five tools
 SURVIVOR merge tt.txt 1000 2 1 1 0 50 TT_merge_5tools.vcf
