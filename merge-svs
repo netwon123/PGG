@@ -10,3 +10,6 @@ ls ./*filtedins.vcf | while read id; do awk '/^#/||$7=="PASS"' $id > ${id}_pass.
 
 #merge sv from five tools
 SURVIVOR merge tt.txt 1000 2 1 1 0 50 TT_merge_5tools.vcf
+
+#exteact long insertion (len>100kb)
+ls *pass.vcf | while read id; do ~/software/WGSc-master/bin/WGS --model vcf --type SVfilter_long --file $id --out ${id}.long.vcf; done
