@@ -18,6 +18,7 @@ ls *pass.vcf | while read id; do ~/software/WGSc-master/bin/WGS --model vcf --ty
 ls ../*5tools.vcf | while read id; do python correct_for_vg.py ~/assembly/Duroc/Duroc_xy.fa $id ${id}.vg_out2; done
 # ~/software/WGSc-master/bin/WGS --model vcf --type mergeSVs --file ${i}.vg_out --file2 loneins/${i}.assembly.vcf.filted.vcf.filtedins.vcf_pass.vcf.long.vcf --out ${i}.all.vcf #ATCG/atcg
 ls *out2 | while read id; do bgzip $id;done
+ls *out2.gz | while read id; do bcftools sort $id > ${id}.sorted.vcf;done
 ls *out2.gz | while read id; do tabix -f $id;done
 bcftools merge a.vcf.gz b.vcf.gz  -o merge.vcf
 
