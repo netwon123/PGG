@@ -36,7 +36,7 @@ with open (sys.argv[2]) as f:
 			merge_sv.write(st)
 			button =0
 		if '#' not in line:
-			row_list = line.split()
+			row_list = line.split('/t')
 			print(row_list[8])
 			if "SVTYPE=DEL" in line and "<DEL>" not in line:
 				merge_sv.write(line)
