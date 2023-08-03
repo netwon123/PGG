@@ -13,3 +13,25 @@ SURVIVOR merge tt.txt 1000 2 1 1 0 50 TT_merge_5tools.vcf
 
 #exteact long insertion (len>100kb)
 ls *pass.vcf | while read id; do ~/software/WGSc-master/bin/WGS --model vcf --type SVfilter_long --file $id --out ${id}.long.vcf; done
+
+#merge sv (<100kb) and long insertion (>100kb)
+ls ../*5tools.vcf | while read id; do python correct_for_vg.py ~/assembly/Duroc/Duroc_xy.fa $id ${id}.vg_out; done
+
+#for 24 assemblies and 3WGS
+ls ./*vcf | while read id; do python removeInfo.py -v $id -o ${id}.clean.vcf  -p ${id}; done
+ls ./*.clean.vcf | while read id; do bcftools norm -m -both $id | bcftools norm -d none -c x --fasta-ref ~/assembly/Duroc/Duroc_xy.fa | bcftools sort | bgzip > ${sample}.nosamp.norm.vcf.gz; done
+ls ./*nosamp.norm.vcf.gz | while read id; WGS --model vcf --type cleanSVs --file $id --out${id}.final.vcf ; done
+
+#for pop sv call
+ls ./*vcf | while read i; do grep -Ev "^NW|^NC_010462\.3|^NC_000845\.1" $i > ${i}.filted.vcf; done 
+ls ./*filted.vcf | while read i; do python filted_ins.py $i ${i}.filtedins.vcf; done
+ls ./*filtedins.vcf | while read id; do awk '/^#/||$7=="PASS"' $id > ${id}_pass.vcf;done
+python removeInfo.py -v pop_pass_seq.filted.vcf.filtedins_fbias.vcf.pass2.vcf -o pop209.clean.vcf  -p pop209
+bcftools norm -m -both pop209.clean.vcf | bcftools norm -d none -c x --fasta-ref ~/assembly/Duroc/Duroc_xy.fa | bcftools sort | bgzip > pop209.norm.vcf.gz
+WGS --model vcf --type cleanSVs --file pop209.norm.vcf.gz --out pop209.final.vcf
+bgzip pop209.final.vcf
+tabix pop209.final.vcf.gz
+
+#merge single sv call and pop sv call
+bcftools merge $VCFS | bcftools norm -m -any -N | bcftools norm -d none --fasta-ref  ~/assembly/Duroc/Duroc_xy.fa | bcftools sort | bgzip > allsv.vcf.gz
+tabix -f hsvlr.vcf.gz
