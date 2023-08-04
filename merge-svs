@@ -24,6 +24,7 @@ done
 
 
 #for 24 assemblies and 3WGS
+ls *4tools.vcf | while read id; do python correct_for_vg_4tools.py ~/assembly/Duroc/Duroc_xy.fa $id  ${id}.vg_out;done
 ls ./*vcf | while read id; do python removeInfo.py -v $id -o ${id}.clean.vcf  -p ${id}; done
 ls ./*.clean.vcf | while read id; do bcftools norm -m -both $id | bcftools norm -d none -c x --fasta-ref ~/assembly/Duroc/Duroc_xy.fa | bcftools sort | bgzip > ${sample}.nosamp.norm.vcf.gz; done
 ls *norm.vcf | while read id; do bgzip -@ 8 $id ;done
