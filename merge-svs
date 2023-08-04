@@ -40,6 +40,17 @@ bcftools norm -m -both pop209.clean.vcf | bcftools norm -d none -c x --fasta-ref
 bgzip pop209.norm.vcf
 tabix pop209.norm.vcf.gz
 
+#for snp called from assemblies
+ls ./*vcf | while read id; do python removeInfo.py -v $id -o ${id}.clean.vcf  -p ${id}; done
+ls ./*.clean.vcf | while read id; do bcftools norm --threads 6 -m -both $id | bcftools norm --threads 6 -d none -c x --fasta-ref ~/assembly/Duroc/Duroc_xy.fa | bcftools sort -@ 6 | bgzip > ${sample}.nosamp.norm.vcf.gz; done
+ls *norm.vcf | while read id; do bgzip -@ 8 $id ;done
+ls *gz | while read id; do tabix -f $id ;done
+ls *gz > snpsample.txt
+bcftools merge --threads 6 -l snpsample.txt | bcftools norm --threads 6 -m -any -N | bcftools norm -d none --fasta-ref  ~/assembly/Duroc/Duroc_xy.fa  | bcftools sort | bgzip -@ 6 > snp.merged.vcf.gz
+
+-------------------------------------------------------------------------------------------------------------
 #merge single sv call and pop sv call
-bcftools merge $VCFS | bcftools norm -m -any -N | bcftools norm -d none --fasta-ref  ~/assembly/Duroc/Duroc_xy.fa | bcftools sort | bgzip > allsv.vcf.gz
+bcftools merge -l svsample.txt | bcftools norm -m -any -N | bcftools norm -d none --fasta-ref  ~/assembly/Duroc/Duroc_xy.fa | bcftools sort | bgzip > allsv.vcf.gz
 tabix -f hsvlr.vcf.gz
+#merge sv and snp
+bcftools merge --threads 6 -l snpsample.txt | bcftools norm --threads 6 -m -any -N | bcftools norm -d none --fasta-ref  ~/assembly/Duroc/Duroc_xy.fa  | bcftools sort | bgzip -@ 6 > snp.merged.vcf.gz
