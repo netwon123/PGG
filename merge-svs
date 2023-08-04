@@ -7,6 +7,7 @@ python filted_idel_len.py $id ${id}.indel_pass.vcf ## indel len < 100Kb; grep "P
 ls ./*vcf | while read i; do grep -Ev "^NW|^NC_010462\.3|^NC_000845\.1" $i > ${i}.filted.vcf; done 
 ls ./*filted.vcf | while read i; do python filted_ins.py $i ${i}.filtedins.vcf; done
 ls ./*filtedins.vcf | while read id; do awk '/^#/||$7=="PASS"' $id > ${id}_pass.vcf;done
+~/software/WGSc-master/bin/WGS --model vcf --type bed2vcf --file  ${id}.bed  --file2 ~/assembly/Duroc/Duroc_simplename.fa --file3 ${id}.fa --out ${id}.vcf
 
 #merge sv from five tools
 SURVIVOR merge tt.txt 1000 2 1 1 0 50 TT_merge_5tools.vcf
@@ -15,7 +16,7 @@ SURVIVOR merge tt.txt 1000 2 1 1 0 50 TT_merge_5tools.vcf
 ls *pass.vcf | while read id; do ~/software/WGSc-master/bin/WGS --model vcf --type SVfilter_long --file $id --out ${id}.long.vcf; done
 
 #merge sv (<100kb) and long insertion (>100kb)
-ls ../*5tools.vcf | while read id; do python correct_for_vg.py ~/assembly/Duroc/Duroc_xy.fa $id ${id}.vg_out2; done
+ls ../*5tools.vcf | while read id; do python correct_for_vg_5tools.py ~/assembly/Duroc/Duroc_xy.fa $id ${id}.vg_out2; done
 ls *out2 | while read i;
 do
 i=${i/.vg_out.out2/}
