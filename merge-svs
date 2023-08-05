@@ -53,7 +53,12 @@ bcftools merge --threads 6 -l snpsample.txt | bcftools norm --threads 6 -m -any 
 
 -------------------------------------------------------------------------------------------------------------
 #merge single sv call and pop sv call
-bcftools merge -l svsample.txt | bcftools norm -m -any -N | bcftools norm -d none --fasta-ref  ~/assembly/Duroc/Duroc_xy.fa | bcftools sort | bgzip > allsv.vcf.gz
+bcftools merge -l svsample.txt | bcftools norm -m -any -N | bcftools norm -d none --fasta-ref  ~/assembly/Duroc/Duroc_xy.fa | bcftools sort | bgzip > allsv_28source.vcf.gz
 tabix -f hsvlr.vcf.gz
+
 #merge sv and snp
-bcftools merge --threads 6 -l snpsample.txt | bcftools norm --threads 6 -m -any -N | bcftools norm -d none --fasta-ref  ~/assembly/Duroc/Duroc_xy.fa  | bcftools sort | bgzip -@ 6 > snp.merged.vcf.gz
+~/software/WGSc-master/bin/WGS --model vcf --type dupPosSNPs --file snp.merged.vcf.gz --file2 allsv_28source.vcf.gz --out SNPs.vcf
+bgzip SNPs.vcf
+tabix -f SNPs.vcf.gz
+bcftools merge --threads 6 allsv_28source.vcf.gz SNPs.vcf.gz | bcftools norm --threads 6 -m -any -N | bcftools norm -d none --fasta-ref  ~/assembly/Duroc/Duroc_xy.fa  | bcftools sort | bgzip -@ 6 > graphAll.merged.vcf.gz
+ ~/software/WGSc-master/bin/WGS --model vcf --type dupPos --file graphAll.merged.vcf.gz --out graphAll.vcf.gz
