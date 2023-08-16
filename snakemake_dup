@@ -1,0 +1,99 @@
+import pandas as pd
+
+# cluster info
+clusters = pd.read_table('neardups-clusters.tsv')
+
+# bam files
+
+
+bams =['/public/home/baoqi/graph/BKSdd_bu.cram','/public/home/baoqi/graph/BMA_SAMN02298128.cram','/public/home/baoqi/graph/BMA_SAMN02298130.cram','/public/home/baoqi/graph/DRC_SAMN14638798.cram','/public/home/baoqi/graph/JH_bu.cram']
+bams += ['/public/home/baoqi/graph/AW_bu.cram','/public/home/baoqi/graph/LC_SAMN02298088.cram','/public/home/baoqi/graph/LC_SAMN02298089.cram','/public/home/baoqi/graph/LDR_bu.cram','/public/home/baoqi/graph/LWU_SAMN02298135.cram']
+bams += ['/public/home/baoqi/graph/LWU_SAMN02298136.cram','/public/home/baoqi/graph/MZ_SAMN02298122.cram','/public/home/baoqi/graph/MZ_SAMN02298123.cram','/public/home/baoqi/graph/RC_SRR5083901.cram']
+bams += ['/public/home/baoqi/graph/TT_SRR9599741.cram','/public/home/baoqi/graph/TT_SRR9599746.cram','/public/home/baoqi/graph/WZS_SAMN02298073.cram','/public/home/baoqi/graph/WZS_SAMN02298075.cram']
+
+
+
+# reference genome
+REF='/public/home/baoqi/assembly_pacbio/Duroc/Duroc.fna'
+
+rule all:
+    input: 
+        expand('called_vcf/cluster-{cl}-{seqn}_{start}_{end}.vcf', zip, cl=[int(x) for x in clusters['cmp']], seqn=clusters['seqnames'].to_list(), start=clusters['start'].to_list(), end=clusters['end'].to_list())
+
+rule clean:
+    shell:
+        "rm fa/* fastq/* vcf/* graph/*"
+
+rule extract_cluster:
+    input:
+        vcf='/public/home/baoqi/graph/split_chr/hsvlr-fordedup-{seqn}.vcf',
+        tsv='neardups-clusters.tsv'
+    output:
+        ref='fa/cluster-{cl}-{seqn}_{start}_{end}.fa',
+        vcf='vcf/cluster-{cl}-{seqn}_{start}_{end}.vcf'
+    shell:
+        "python extractCluster.py -f {REF} -v {input.vcf} -t {input.tsv} -c {wildcards.cl} -ov {output.vcf} -of {output.ref}"
+
+rule extract_reads:
+    input: bams
+    output: 'fastq/cluster-{cl}-{seqn}_{start}_{end}.fastq'
+    threads: 4
+    shell:
+        """
+        rm -f {output} {output}.log
+        for ff in {input}
+        do
+        echo $ff
+        samtools view -@ {threads} -bh $ff {wildcards.seqn}:{wildcards.start}-{wildcards.end} | samtools fastq - >> {output} 2>> {output}.log
+        done
+        """
+
+rule vg_call:
+    input:
+        ref='fa/cluster-{cl}-{seqn}_{start}_{end}.fa',
+        vcf='vcf/cluster-{cl}-{seqn}_{start}_{end}.vcf',
+        reads='fastq/cluster-{cl}-{seqn}_{start}_{end}.fastq'
+    output: 'called_vcf/cluster-{cl}-{seqn}_{start}_{end}.vcf'
+    params: vgpref='graph/cluster-{cl}-{seqn}_{start}_{end}'
+    shell:
+        """
+        samtools faidx {input.ref}
+        /public/software/singularity/singularity-3.5.2/bin/singularity exec --nv --network=none -n /public/home/baoqi/vg_v1.49.0.sif vg construct -t 1 -v {input.vcf} -r {input.ref} -a -S -f > {params.vgpref}.vg 2> {params.vgpref}.log
+        /public/software/singularity/singularity-3.5.2/bin/singularity exec --nv --network=none -n /public/home/baoqi/vg_v1.49.0.sif vg index -t 1 -g {params.vgpref}.gcsa -x {params.vgpref}.xg -L {params.vgpref}.vg 2>> {params.vgpref}.log
+        /public/software/singularity/singularity-3.5.2/bin/singularity exec --nv --network=none -n /public/home/baoqi/vg_v1.49.0.sif vg map -t 1 -x {params.vgpref}.xg -g {params.vgpref}.gcsa -f {input.reads} > {params.vgpref}.gam 2>> {params.vgpref}.log
+        /public/software/singularity/singularity-3.5.2/bin/singularity exec --nv --network=none -n /public/home/baoqi/vg_v1.49.0.sif vg pack -t 1 -Q 1 -x {params.vgpref}.xg -g {params.vgpref}.gam -o {params.vgpref}.pack 2>> {params.vgpref}.log
+        /public/software/singularity/singularity-3.5.2/bin/singularity exec --nv --network=none -n /public/home/baoqi/vg_v1.49.0.sif vg call -t 1 -k {params.vgpref}.pack -s test -v {input.vcf} {params.vgpref}.xg > {output} 2>> {params.vgpref}.log
+        rm -f {input.vcf} {input.ref} {input.ref}.fai {input.reads} {input.reads}.log {params.vgpref}.log {params.vgpref}.pack {params.vgpref}.xg {params.vgpref}.gam {params.vgpref}.vg {params.vgpref}.gcsa {params.vgpref}.gcsa.lcp
+        """
+
+ruleorder: wrapper > vg_call
+rule wrapper:
+    input:
+        vcf='/public/home/baoqi/graph/split_chr/hsvlr-fordedup-{seqn}.vcf',
+        tsv='neardups-clusters.tsv',
+        bams=bams
+    output: 'called_vcf/cluster-{cl}-{seqn}_{start}_{end}.vcf'
+    params:
+        vgpref='graph/cluster-{cl}-{seqn}_{start}_{end}',
+        vcf='vcf/cluster-{cl}-{seqn}_{start}_{end}.vcf',
+        ref='fa/cluster-{cl}-{seqn}_{start}_{end}.fa',
+        fq='fastq/cluster-{cl}-{seqn}_{start}_{end}.fastq'
+    threads: 4
+    shell:
+        """
+        python extractCluster.py -f {REF} -v {input.vcf} -t {input.tsv} -c {wildcards.cl} -ov {params.vcf} -of {params.ref}
+        rm -f {params.fq} {params.fq}.log
+        sleep $((1 + RANDOM % 10))
+        for ff in {input.bams}
+        do
+        echo $ff
+        samtools view -@ {threads} -bh $ff {wildcards.seqn}:{wildcards.start}-{wildcards.end} | samtools fastq - >> {params.fq} 2>> {params.fq}.log
+        done
+        samtools faidx {params.ref}
+        /public/software/singularity/singularity-3.5.2/bin/singularity exec --nv --network=none -n /public/home/baoqi/vg_v1.49.0.sif  vg construct -t 4 -v {params.vcf} -r {params.ref} -a -S -f > {params.vgpref}.vg 2> {params.vgpref}.log
+        /public/software/singularity/singularity-3.5.2/bin/singularity exec --nv --network=none -n /public/home/baoqi/vg_v1.49.0.sif  vg index -t {threads} -g {params.vgpref}.gcsa -x {params.vgpref}.xg -L {params.vgpref}.vg 2>> {params.vgpref}.log
+        /public/software/singularity/singularity-3.5.2/bin/singularity exec --nv --network=none -n /public/home/baoqi/vg_v1.49.0.sif  vg map -t {threads} -x {params.vgpref}.xg -g {params.vgpref}.gcsa -f {params.fq} > {params.vgpref}.gam 2>> {params.vgpref}.log
+        /public/software/singularity/singularity-3.5.2/bin/singularity exec --nv --network=none -n /public/home/baoqi/vg_v1.49.0.sif  vg pack -t {threads} -Q 1 -x {params.vgpref}.xg -g {params.vgpref}.gam -o {params.vgpref}.pack 2>> {params.vgpref}.log
+        /public/software/singularity/singularity-3.5.2/bin/singularity exec --nv --network=none -n /public/home/baoqi/vg_v1.49.0.sif  vg call -t {threads} -k {params.vgpref}.pack -s test -v {params.vcf} {params.vgpref}.xg > {output} 2>> {params.vgpref}.log
+        rm -f {params.vcf} {params.ref} {params.ref}.fai {params.fq} {params.fq}.log {params.vgpref}.log {params.vgpref}.pack {params.vgpref}.xg {params.vgpref}.gam {params.vgpref}.vg {params.vgpref}.gcsa {params.vgpref}.gcsa.lcp
+        """
