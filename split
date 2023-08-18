@@ -1,0 +1,30 @@
+
+split -d -l 1000 neardups-clusters_seq.tsv ./split/output --additional-suffix=.tsv
+ls *tsv | while read id;
+do
+  file=$(basename $id )
+  sample=${file%%.*}
+  cat head.tsv $id > $sample.tsv2
+done
+
+ls *tsv2 | while read id;
+do
+  file=$(basename $id )
+  sample=${file%%.*}
+  mv $id  $sample.tsv
+done
+  
+  
+ls *tsv | while read id;
+do
+  file=$(basename $id )
+  sample=${file%%.*}
+  mkdir -p $sample/vcf
+  mkdir -p $sample/fa
+  mkdir -p $sample/fastq
+  mkdir -p $sample/graph
+  mv $id $sample/neardups-clusters_seq.tsv
+  cp ../extractCluster.py $sample
+  cp ../snkemake_dup $sample
+done
+
