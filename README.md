@@ -17,3 +17,6 @@ do
 #ls *cram | while read id; do samtools index $id ;done
     snakemake --scheduler greedy -s snkemake_dup --cores 4 --batch all=$BATCH/10
 done
+
+
+singularity pull docker://jmcdani20/hap.py:v0.3.12
