@@ -20,3 +20,6 @@ done
 
 
 singularity pull docker://jmcdani20/hap.py:v0.3.12
+
+evaluated the performance of 
+ls *pan.vcf.gz | while read id; do singularity exec --network=none -n ~/hap.py_latest.sif /opt/hap.py/bin/hap.py 1_ms.vcf.gz $id -r ../../Duroc.fa --threads 4 -o ${id} --unhappy --no-roc --no-json --engine=vcfeval;done
