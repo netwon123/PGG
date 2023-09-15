@@ -36,6 +36,7 @@ ls ./*vcf | while read i; do grep -Ev "^NW|^NC_010462\.3|^NC_000845\.1" $i > ${i
 ls ./*filted.vcf | while read i; do python filted_ins.py $i ${i}.filtedins.vcf; done
 ls ./*filtedins.vcf | while read id; do awk '/^#/||$7=="PASS"' $id > ${id}_pass.vcf;done
 bcftools reheader -s ../sample_id.txt pop_pass_seq.filted.vcf.filtedins_fbias.vcf.pass.vcf -o pop_pass_seq.filted.vcf.filtedins_fbias.vcf.pass_rename.vcf #simple ID
+python filted_idel_len.py $id ${id}.indel_pass.vcf ## indel len < 100Kb; grep "PASS"
 python correct_for_vg_pop.py ~/assembly/Duroc/Duroc_xy.fa pop_pass_seq.filted.vcf.filtedins_fbias.vcf.pass_rename.vcf   pop.vg_out
 python removeInfo.py -v pop_pass_seq.filted.vcf.filtedins_fbias.vcf.pass2.vcf -o pop209.clean.vcf  -p pop209
 bcftools norm -m -both pop209.clean.vcf | bcftools norm -d none -c x --fasta-ref ~/assembly/Duroc/Duroc_xy.fa | bcftools sort | bgzip > pop209.norm.vcf.gz
