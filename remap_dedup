@@ -1,5 +1,6 @@
 #get the neardups-clusters_seq.tsv and hsvlr-fordedup-CHR.vcf
 /public/software/singularity/bin/singularity exec --network=none -n ~/sveval_v2.3.0.sif Rscript findDups.R
+### more important, DUP will convert to INS in this way
 
 #split to small size  
 split -d -l 1000 neardups-clusters_seq.tsv ./split/output --additional-suffix=.tsv
