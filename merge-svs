@@ -1,4 +1,5 @@
 #filted for each sv call from 4 tools (cutesv,pbsv,sniffle,debreak)
+iris genome_in=~/assembly_pacbio/Duroc/Duroc.fa vcf_in=./CLR/NX_pacbio.cutesv.vcf reads_in=NX_pacbio.sort.bam vcf_out=NX_polish_cutesv.vcf --pacbio --rerunracon
 ls ./*vcf | while read i; do grep -Ev "^NW|^NC_010462\.3|^NC_000845\.1" $i > ${i}.filted.vcf; done 
 ls ./*filted.vcf | while read i; do python filted_ins.py $i ${i}.filtedins.vcf; done
 python filted_idel_len.py $id ${id}.indel_pass.vcf ## indel len < 100Kb; grep "PASS"
