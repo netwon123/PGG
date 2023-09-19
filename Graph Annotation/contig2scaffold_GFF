@@ -1,0 +1,9 @@
+pip install jcvi  -i https://pypi.tuna.tsinghua.edu.cn/simple
+wget https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver
+chmod +x liftOver
+
+
+###get the ragtag.scaffold.chain from .agp file from ragtag result
+python -m jcvi.formats.chain fromagp ragtag.scaffold.agp contig.fasta chr.fa
+
+liftOver -gff contig.gff3 ragtag.scaffold.chain chr.gff3 unmapped
