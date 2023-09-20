@@ -43,6 +43,9 @@ cuteSV $id  ~/assembly/Duroc/Duroc.fa $sample.cutesv.vcf ./tmp_dir -t 56 --min_s
 > For force calling:
 	--min_mapq 			10
 
+#-------dereak-----
+debreak --bam MS_pacbio.sort.bam -o db_ms --min_size 50 --depth 111 -t 16 --rescue_large_ins --rescue_dup --poa --ref ~/assembly_pacbio/Duroc/Duroc.fa
+
 #corrected CLR reads
 ls ./*vcf | while read i;
 do
