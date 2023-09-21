@@ -97,8 +97,8 @@ svreg.df = tibble(id=names(svs), chr=as.character(seqnames(svs)),
                   start=start(svs), end=end(svs)) %>% merge(cl.c.df) %>%
   group_by(cmp, chr) %>% summarize(start=min(start)-flank.l, end=max(end)+flank.l)
 
-## chr lengths
-cyto.df = read.table('chr.bed', as.is=TRUE, sep='\t')
+## chr lengths, file downloaded from https://hgdownload.soe.ucsc.edu/goldenPath/susScr11/database/cytoBandIdeo.txt.gz
+cyto.df = read.table('ss11-cytobandideo.txt', as.is=TRUE, sep='\t')
 cyto.df = cyto.df[, 1:3]
 colnames(cyto.df) = c('chr', 'start', 'end')
 
