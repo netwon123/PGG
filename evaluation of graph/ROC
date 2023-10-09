@@ -1,0 +1,14 @@
+vg sim -x PGG_all.giraffe.gbz -n 2000000 -l 150 -r -a  -F ~/PGG_netwon/SRS/down/ERR544842_1.fastq.gz -F ~/PGG_netwon/SRS/down/ERR544842_2.fastq.gz -s 330  -i 0.0002 -t 56 -p 570 -v 165 > 200read.gam
+
+vg annotate -p -x PGG_all.giraffe.gbz -a 200read.gam > sim.gam
+
+vg annotate -p -x PGG_all.giraffe.gbz -a sim.gam | vg view -a - | jq -c -r '[ .name, .refpos[0].name, .refpos[0].offset ] | @tsv' | sort >truth.tsv
+vg annotate -n -x PGG_all.giraffe.gbz -a sim.gam | tail -n+2 | sort >novelty.tsv
+ join truth.tsv novelty.tsv > sim.gam.truth.tsv
+
+vg view -a sim.gam |jq -cr 'select(.name | test("_1$"))' | vg view -JaG - | vg view -X - | sed s/_1$// | gzip > sim_R1.fq.gz
+vg view -a sim.gam |jq -cr 'select(.name | test("_2$"))' | vg view -JaG - | vg view -X - | sed s/_2$// | gzip > sim_R2.fq.gz
+
+#must sort
+grep -v ^@ bwa.sam| perl -ne '@val = split("\t", $_); print @val[0] . "_" . (@val[1] & 64 ? "1" : @val[1] & 128 ? "2" : "?"), "\t" . @val[2] . "\t" . (@val[3] +  int(length(@val[9]) / 2)) . "\t" . @val[4] . "\t" . @val[14] . "\n";'| sed s/AS:i:// | sort >$output/bwa_mem-pe.pos
+join bwa_mem-pe.pos3 sim.gam.truth.tsv | python compare.py 150 > bwa-pe.compare
