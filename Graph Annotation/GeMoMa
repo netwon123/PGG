@@ -1,0 +1,1 @@
+java -jar GeMoMa-1.7.1.jar CLI GeMoMaPipeline threads=48 AnnotationFinalizer.r=NO p=false o=true tblastn=false t=LDR.fa outdir=output s=own i=Duroc a=Duroc.gff3 g=Duroc.fa
