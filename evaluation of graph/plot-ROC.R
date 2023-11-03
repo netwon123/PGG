@@ -1,4 +1,4 @@
-setwd('G:/PGG-project/analysis/eval_graph/final/')
+setwd('G:/博士/泛基因组组/PGG-project/analysis/eval_graph/final/')
 
 list.of.packages <- c("tidyverse", "ggrepel", "svglite")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -98,9 +98,9 @@ max.log10 <- 0
 # Work out a set of bounds to draw the plot on
 range.log10 <- min.log10 : max.log10
 range.unlogged = 10^range.log10
-#pdf('roc——onlySV.pdf',height = 10,width = 9)
+pdf('roc.pdf',height = 10,width = 9)
 ggplot(dat.roc, aes( x= FPR, y = TPR, color = aligner, label=mq)) +
-  geom_line(alpha = 0.75) + geom_text_repel(data = dat.roc, size=3.5, point.padding=unit(0.7, "lines"), segment.alpha=I(1/2.5),show.legend = FALSE) +
+  geom_line(alpha = 0.5,size=1) + geom_text_repel(data = dat.roc, size=3.5, point.padding=unit(0.7, "lines"), segment.alpha=I(1/2.5),show.legend = FALSE) +
   geom_point(aes(size=Positive+Negative),alpha = 0.75) +
   scale_color_manual(values=colors, guide=guide_legend(title=NULL)) +
   scale_size_continuous("number", guide=guide_legend(title=NULL),labels = function(x) format(x, scientific = FALSE),range=c(1,10)) +
@@ -110,15 +110,14 @@ ggplot(dat.roc, aes( x= FPR, y = TPR, color = aligner, label=mq)) +
                      legend.margin = margin(t = 0, r = 0, b = 10, l = 10),legend.box.background = element_rect(colour="black",size = 0.1),
                      legend.title= element_text( size = 10, color = "black"),
                      legend.background = element_rect(fill = "transparent"))+labs(x = "False-positive rate", y = "True-positive rate")+
-  theme(text = element_text(family = "A"))+ theme(axis.text = element_text( size = 10, color = "black"),
-                                                  axis.title = element_text( size = 12, color = "black"))
-                                                  
+  theme(axis.text = element_text( size = 10, color = "black"),axis.title = element_text( size = 12, color = "black"))
+dev.off()                                                
 A=windowsFont("Arial")
 
 
 
 
-#dev.off()
+
 if (title != '') {
   # And a title
   dat.plot + ggtitle(title)
