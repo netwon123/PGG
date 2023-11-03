@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-setwd('G:/PGG-project/analysis/eval_graph/final/')
+setwd('G:/博士/泛基因组组/PGG-project/analysis/eval_graph/final/')
 # plot-qq.R <stats TSV> <destination image file> [<comma-separated "aligner" names to include> [title]]
 
 list.of.packages <- c("tidyverse", "ggrepel", "svglite")
@@ -85,6 +85,7 @@ dat$bin <- cut(dat$mq, c(-Inf,seq(0,60,1),Inf))
 
 x <- as.data.frame(summarize(group_by(dat, bin, aligner), N=n(), mapq=mean(mq), mapprob=mean(1-10^(-mapq/10)), observed=weighted.mean(correct, count)))
 A=windowsFont("Arial")
+pdf('roc.paf')
 ggplot(x, aes(1-mapprob+1e-9, 1-observed+1e-9, color=aligner, size=N, weight=N, label=round(mapq,2))) +
   scale_color_manual(values=colors, guide=guide_legend(title=NULL, ncol=1)) +
   scale_y_log10("measured error", limits=c(5e-7,2), breaks=c(1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1e0)) +
@@ -96,8 +97,9 @@ ggplot(x, aes(1-mapprob+1e-9, 1-observed+1e-9, color=aligner, size=N, weight=N, 
   theme_bw()+theme(legend.position = c(1, 0),legend.title= element_text( size = 10, color = "black"),
                    legend.justification = c(1, 0),legend.box.background = element_rect(colour="black",size = 0.1),
                    legend.margin = margin(t = 0, r = 0, b = 10, l = 10),
-                   legend.background = element_rect(fill = "transparent"))+ggtitle(title) +theme(text = element_text(family = "A"))+ theme(axis.text = element_text( size = 10, color = "black"),
-                                                                                                                                          axis.title = element_text( size = 12, color = "black"))
+                   legend.background = element_rect(fill = "transparent"))+ggtitle(title) + theme(axis.text = element_text( size = 10, color = "black"),axis.title = element_text( size = 12, color = "black"))
+                                                                                                                                           
+                                                                                                                                                                                                                                                                         axis.title = element_text( size = 12, color = "black"))
 
 if (title != '') {
   # And a title
