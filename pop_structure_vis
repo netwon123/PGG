@@ -1,0 +1,32 @@
+#-----------------------pca------------------------
+library(ggplot2)
+library(RColorBrewer)
+display.brewer.all(type = "all")
+pca <- read.table("PCA.txt",sep = "\t",header = T)
+pdf('pca.pdf',width = 10,height = 10)
+color =c("#8ECFC9", "#82B0D2", "#FA7F6F", "#FFBE7A")
+ggplot(pca, aes(x=pca1,y=pca2,color=region,shape = pop)) +
+  geom_point(size=7,alpha = 0.75)+
+  labs(x="PC1(23.0582%)",y="PC2(8.6681%)")+theme_bw()+theme(legend.title = element_blank())+scale_color_manual(values = color)+scale_shape_manual(values = 1:23) +theme(panel.grid=element_blank())+theme(text=element_text(size=20,face ='bold'))+ theme_bw()+
+  theme(axis.title = element_text(
+    size=12, ##字体大小
+    lineheight = 1),##标签行间距的倍数
+    axis.text = element_text(size=10))
+
+#---------------admixture------------------------------------
+library(data.table)
+library(itol.toolkit)
+setwd('G:/博士/泛基因组组/PGG-project/analysis/pop_structure/structure/')
+library(pophelper)
+sfile = paste0("admix.",2:4,".Q")
+slist <- readQ(sfile,indlabfromfile = T)
+
+##draw by group
+pop <- read.table("group2.txt",header = F,sep = "\t",stringsAsFactors = F,row.names = 1)
+plotQ(slist,imgoutput = "join",imgtype = "pdf",height = 1.2,width = 20,clustercol=c("#8ECFC9", "#82B0D2", "#FA7F6F", "#FFBE7A"),indlabsize = 2,
+      showindlab = T,useindlab = T,sharedindlab = T,
+      showsp = T,sppos ="left",splab= paste0("K=",2:4),splabangle = 180,grplabalpha=0.75,
+      showlegend = F,ordergrp = T,grplab = pop,
+      
+      outputfilename = paste0("admixture_barplot_pop"),units = "cm",
+      exportpath = getwd())
