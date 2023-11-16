@@ -9,10 +9,13 @@ vcftools \
 
 
 #pca
-~/software/plink --vcf ../pop_filted2.vcf --recode --out testacc_qc --const-fid --allow-extra-chr --threads 20
+~/software/plink --vcf ../pop_filted2.vcf --recode --out testacc_qc --geno 0.3 --maf 0.05 --const-fid --allow-extra-chr --threads 20
 ~/software/plink --allow-extra-chr --file testacc_qc --noweb --make-bed --out testacc_qc --threads 20
 ~/software/plink --allow-extra-chr --threads 20 -bfile testacc_qc --pca 2 --out testacc_qc
 
 #tree
 ./VCF2Dis-1.50/bin/VCF2Dis -InPut new.sample.vcf -OutPut pca_dis_all.mat
 ~/software/PHYLIPNEW-3.69.650/bin/fneighbor -datafile pca_dis_all.mat -outfile tree.out1.txt -matrixtype s -treetype n -outtreefile tree.out2.tre
+
+#admixture
+for K in 2 3 4; do admixture -j16 --cv admix.bed $K | tee log${K}.out; done
