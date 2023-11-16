@@ -1,17 +1,52 @@
 #-----------------------pca------------------------
+setwd('G:/博士/泛基因组组/PGG-project/analysis/pop_structure/')
 library(ggplot2)
 library(RColorBrewer)
+library(patchwork)
 display.brewer.all(type = "all")
 pca <- read.table("PCA.txt",sep = "\t",header = T)
-pdf('pca.pdf',width = 10,height = 10)
+pcaw <- read.table("pca-west.txt",sep = "\t",header = T)
+
+shapelist=c("EW"="#FFBE7A",
+            "BKS"="#420516",
+            "DRC"="#fc6076",
+            "HAM"="#ff0844",
+            "LDR"="#FA7F6F",
+            "LW"="#faaca8",
+            "PTR"="#B42B51",
+            "AW"="#82B0D2",
+            "AQ"="#c1dfc4",
+            "BM"="#96CDCD",
+            "BMA"="#668B8B",
+            "GEH"="#92FFC0",
+            "JH"="#00868B",
+            "LC"="#7FFFD4",
+            "LWU"="#8ECFC9",
+            "MAS"="#66CDAA",
+            "MS"="#C1FFC1",
+            "MZ"="#9BCD9B",
+            "RC"="#698B69",
+            "TT"="#43CD80",
+            "TUC"="#2E8B57",
+            "WNH"="#BCEE68",
+            "WZS"="#FFF68F")
 color =c("#8ECFC9", "#82B0D2", "#FA7F6F", "#FFBE7A")
-ggplot(pca, aes(x=pca1,y=pca2,color=region,shape = pop)) +
+p1=ggplot(pca, aes(x=pca1,y=pca2,color=pop,shape = region)) +
   geom_point(size=7,alpha = 0.75)+
-  labs(x="PC1(23.0582%)",y="PC2(8.6681%)")+theme_bw()+theme(legend.title = element_blank())+scale_color_manual(values = color)+scale_shape_manual(values = 1:23) +theme(panel.grid=element_blank())+theme(text=element_text(size=20,face ='bold'))+ theme_bw()+
+  labs(x="PC1(23.0582%)",y="PC2(8.6681%)")+theme_bw()+theme(legend.title = element_blank())+scale_color_manual(values = shapelist)+scale_shape_manual(values = c(15,17,16,18)) +theme(panel.grid=element_blank())+ theme_bw()+
   theme(axis.title = element_text(
     size=12, ##字体大小
     lineheight = 1),##标签行间距的倍数
     axis.text = element_text(size=10))
+
+p2=ggplot(pcaw, aes(x=pca1,y=pca2,color=pop,shape = region)) +
+  geom_point(size=7,alpha = 0.75)+
+  theme_bw()+theme(legend.title = element_blank())+scale_color_manual(values = shapelist)+scale_shape_manual(values = c(16,18)) +theme(panel.grid=element_blank())+ theme_bw()+
+  theme(axis.title = element_text(
+    size=12, ##字体大小
+    lineheight = 1),##标签行间距的倍数
+    axis.text = element_text(size=10))+ theme(legend.position = "none")
+p1+p2+plot_layout(nrow=1)
 
 #---------------admixture------------------------------------
 library(data.table)
