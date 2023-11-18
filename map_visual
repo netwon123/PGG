@@ -1,0 +1,40 @@
+library(ggplot2)
+library(maps)
+setwd('G:/博士/泛基因组组/PGG-project/analysis/')
+
+world <- map_data("world")
+
+XY <- read.table('zuobiao.txt',header = T)
+
+custom_map1 <- map_data("world")
+
+data <- data.frame(group=c('EAD','EAW','WAD','WAW'),
+                   value=c(148,6,54,1))
+colos=c("#8ECFC9", "#82B0D2","#FA7F6F", "#FFBE7A")
+
+
+p3=ggplot(data, aes(x=group, y=value,fill=group)) +
+   geom_bar(stat="identity",alpha=0.75)+ theme_classic()+scale_fill_manual(values = colos)+theme(legend.position = "none",
+                                                                                       axis.text.x = element_blank(),
+                                                                                       axis.text.y = element_text(color = "black",size=8),
+                                                                                       axis.line.x = element_blank(),
+                                                                                       axis.ticks.x = element_blank(),
+                                                                                       panel.background = element_blank(),
+                                                                                       plot.background = element_blank())+labs(x='', y='')+scale_y_continuous(expand = c(0,0))
+dui=c('EAD'="#8ECFC9",'EAW'="#82B0D2",'WAD'="#FA7F6F",'WAW'="#FFBE7A")
+#------
+custom_map <- map_data("world", xlim = c(-150, 150), ylim = c(0,80))
+ggplot(custom_map, aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill="#E7DAD2",size=0.1,alpha=0.5)+geom_point(XY,mapping=aes(long, lat,size=num,color=group),alpha=0.75,shape=16)+scale_color_manual(values = dui)+
+  scale_y_continuous(expand = c(0,0))+
+  annotation_custom(grob=ggplotGrob(p3),
+                    ymin = -30, ymax = 0, 
+                    xmin=-171, xmax=-100)+theme(legend.position = c(0.8,0.5),legend.background = element_rect(fill = "transparent"))+
+  theme_bw()+scale_x_continuous(breaks = c(-150, -100, -50, 0, 50, 100, 150), expand = c(0, 0), 
+                                                                                                                                                                        labels = c('150°W', '100°W', '50°W', '0', '50°E', '100°E', '150°E')) +
+  scale_y_continuous(breaks = c(-60, -30, 0, 30, 60), expand = c(0, 0), 
+                     labels = c('60°S', '30°S', '0', '30°N', '60°N')) +
+  labs(x = 'Longitude', y = 'Latitude')+geom_text(data = XY, aes(x = long, y = lat, label = lable), vjust = -0.5, hjust = 1) 
+  
+
+
