@@ -57,10 +57,10 @@ sfile = paste0("admix.",2:4,".Q")
 slist <- readQ(sfile,indlabfromfile = T)
 
 ##draw by group
-pop <- read.table("group2.txt",header = F,sep = "\t",stringsAsFactors = F,row.names = 1)
+pop <- read.table("group3.txt",header = F,sep = "\t",stringsAsFactors = F,row.names = 1)
 plotQ(slist,imgoutput = "join",imgtype = "pdf",height = 1.2,width = 20,clustercol=c("#8ECFC9", "#82B0D2", "#FA7F6F", "#FFBE7A"),indlabsize = 2,
       showindlab = T,useindlab = T,sharedindlab = T,
-      showsp = T,sppos ="left",splab= paste0("K=",2:4),splabangle = 180,grplabalpha=0.75,
+      showsp = T,sppos ="left",splab= paste0("K=",2:4),splabangle = 180,grplabalpha=0.75,sortind="label",
       showlegend = F,ordergrp = T,grplab = pop,
       
       outputfilename = paste0("admixture_barplot_pop"),units = "cm",
