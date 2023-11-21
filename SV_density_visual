@@ -1,0 +1,55 @@
+setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/')
+df<-read.table("INS_density.snpde2n",sep="\t",header=T)
+ins<-read.table("INS_density.snpden2",sep="\t",header=T)
+del<-read.table("DEL_density.snpden2",sep="\t",header=T)
+dup<-read.table("DUP_density.snpden2",sep="\t",header=T)
+inv<-read.table("INV_density.snpden2",sep="\t",header=T)
+bnd<-read.table("BND_density.snpden2",sep="\t",header=T)
+head(df)
+df<-ins[,c(1,2,4)]
+colnames(df)<-c("Chr","X","Y")
+ins<-ins[,c(1,2,4)]
+colnames(ins)<-c("Chr","X","Y")
+del<-del[,c(1,2,4)]
+colnames(del)<-c("Chr","X","Y")
+dup<-dup[,c(1,2,4)]
+colnames(dup)<-c("Chr","X","Y")
+inv<-inv[,c(1,2,4)]
+colnames(inv)<-c("Chr","X","Y")
+bnd<-bnd[,c(1,2,4)]
+colnames(bnd)<-c("Chr","X","Y")
+df$X<-df$X/1000000
+ins$X<-ins$X/1000000
+del$X<-del$X/1000000
+dup$X<-dup$X/1000000
+inv$X<-inv$X/1000000
+bnd$X<-bnd$X/1000000
+options(scipen=999)
+library(circlize)
+library(RColorBrewer)
+
+circos.initialize(factors=df$Chr,x=df$X)
+
+circos.trackPlotRegion(factors=df$Chr,y=df$Y,
+                       panel.fun=function(x,y){
+                         circos.axis(h='top',labels = TRUE,labels.cex=0.5,labels.facing = "inside",)
+                       },track.height = 0.05,bg.col='#E7DAD2')
+
+for(i in 1:19){
+  
+  circos.text(CELL_META$xcenter, CELL_META$ycenter,
+              labels = i,
+              sector.index = i,cex=0.7,facing = 'inside',adj=c(0.5,0.5))
+}
+circos.trackPlotRegion(factors=ins$Chr,y=ins$Y,track.height=0.1)
+circos.trackLines(ins$Chr,ins$X,ins$Y,col='#8ECFC9')
+circos.trackPlotRegion(factors=del$Chr,y=del$Y,track.height=0.1)
+circos.trackLines(del$Chr,del$X,del$Y,col='#FA7F7F')
+circos.trackPlotRegion(factors=dup$Chr,y=dup$Y,track.height=0.1)
+circos.trackLines(dup$Chr,dup$X,dup$Y,col='#FFBE7A')
+circos.trackPlotRegion(factors=inv$Chr,y=inv$Y,track.height=0.1)
+circos.trackLines(inv$Chr,inv$X,inv$Y,col='#82B0D2')
+circos.trackPlotRegion(factors=bnd$Chr,y=bnd$Y,track.height=0.1)
+circos.trackLines(bnd$Chr,bnd$X,bnd$Y,col='#BEB8DC')
+circos.clear()
+
