@@ -6,10 +6,10 @@ vcftools \
 --max-missing 0.8 \
 --maf 0.05
 
-
+vcftools --maf 0.05 --max-missing 0.3 --recode --recode-INFO-all --vcf pop_final_id_rn_100k_bnd.sort.vcf --out pop_miss03_maf005
 
 #pca
-~/software/plink --vcf ../pop_filted2.vcf --recode --out testacc_qc --geno 0.3 --maf 0.05 --const-fid --allow-extra-chr --threads 20
+~/software/plink --vcf ../pop_filted2.vcf --recode --out testacc_qc --const-fid --allow-extra-chr --threads 20
 ~/software/plink --allow-extra-chr --file testacc_qc --noweb --make-bed --out testacc_qc --threads 20
 ~/software/plink --allow-extra-chr --threads 20 -bfile testacc_qc --pca 2 --out testacc_qc
 
