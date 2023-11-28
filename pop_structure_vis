@@ -65,3 +65,46 @@ plotQ(slist,imgoutput = "join",imgtype = "pdf",height = 1.2,width = 20,clusterco
       
       outputfilename = paste0("admixture_barplot_pop"),units = "cm",
       exportpath = getwd())
+
+#culumative line
+
+
+setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/')
+df<-read.table("cultimate2.txt",header = TRUE)
+
+
+ggplot(df, aes( x=samples, y = num)) +theme_bw()+ geom_smooth(se = FALSE,color='#FA7F6F',size=2) +
+  xlab("Samples") + ylab("Cumulative unique SVs") 
+  
+  
+  
+
+#-----堆叠图
+
+library(ggplot2)
+
+library(dplyr)
+library(RColorBrewer)
+ co =c('#BEB8DC',"#8ECFC9", "#FA7F6F","#82B0D2", "#FFBE7A")
+ df <- read.table('duidie.txt',header = T)
+ head(df)
+ data<-melt(df,id.vars='name')
+ head(data)
+ # Calculate the total sum for each 'name'
+ data_sum <- data %>%
+   group_by(name) %>%
+   summarise(total = sum(value)) %>%
+   arrange(desc(total)) %>%
+   pull(name)
+ 
+ # Reorder the 'name' factor based on the total sum
+ data$name <- factor(data$name, levels = data_sum)
+ 
+ # Create the stacked bar chart
+ ggplot(data, aes(x = name, y = value, fill = variable)) +
+   geom_bar(position = "stack", stat="identity", color = 'white', alpha = 0.75, width = 1) +
+   scale_y_continuous(labels = scales::comma, expand = c(0,0)) +scale_fill_manual(values = co)+
+     theme_+theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1,size = 3.5)) +
+    ylab("Count")
+ 
+ 
