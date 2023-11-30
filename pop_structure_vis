@@ -129,4 +129,29 @@ ggplot(data, aes(x=SVLEN, color = SVTYPE)) +
   xlab('') + 
   ylab("SV Count")
 
+#----------4type-----------
+setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/')
+library(ggplot2)
+data<-read.table("stats_pop.txt",sep="\t",header=T)
+data$group <- ifelse(data$AF == 1, "Shared", ifelse(data$AF >= 0.5 & data$AF < 1, "Major", ifelse(data$AF >= 1/203 & data$AF < 0.5,'Polymorphic','Singleton')))
+data_sv_group <- plyr::count(data,c('SVTYPE','group'))
+data_sv_group$SVTYPE <- factor(data_sv_group$SVTYPE)
+data_sv_group$label <- 0
+
+for (type_sv in levels(data_sv_group$SVTYPE)){
+  data_sv_group[data_sv_group$SVTYPE==type_sv,]$label <- sum(data_sv_group[data_sv_group$SVTYPE==type_sv,]$freq)
+}
+data_sv_group$SVTYPE <- factor(data_sv_group$SVTYPE, levels = c( 'DEL', 'INS', 'DUP', 'INV', 'BND'))
+
+ggplot(data_sv_group, aes(x = SVTYPE, y = freq, fill = group)) + 
+  geom_bar(position = "fill",stat = "identity",alpha=0.75) +
+  scale_y_continuous() + 
+  coord_flip() + 
+  theme_classic()+
+  theme(legend.title=element_blank(),
+        legend.position="bottom",
+        legend.key.size=unit(1, 'cm')) +
+  scale_fill_manual(values  =c("#FFBE7A","#8ECFC9", "#82B0D2", "#FA7F6F",'red')) + 
+  xlab("") + 
+  ylab("")+theme(panel.grid=element_blank())
 
