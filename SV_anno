@@ -1,0 +1,4 @@
+#using vep v110
+grep -v "#" data.gff | sort -k1,1 -k4,4n -k5,5n -t$'\t' | bgzip -c > data.gff.gz
+tabix -p gff data.gff.gz
+./vep -i input.vcf --gff data.gff.gz --fasta genome.fa.gz
