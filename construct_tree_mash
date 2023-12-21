@@ -1,0 +1,33 @@
+ls *fa | while read id;
+do
+mash sketch -p 8 -o ${id}.msh $id
+done
+mash paste combined_sketch.msh \
+Anqingliubai.genome.fasta.msh \
+AW.fa.msh \
+BKS.fa.msh \
+BMA.fa.msh \
+BMA_ncbi.fasta.msh \
+DNSE.fa.msh \
+duroc.fasta.msh \
+EuropeanWild.genome.fasta.msh \
+Jinhua.genome.fasta.msh \
+Laiwu.genome.fasta.msh \
+LAT.fa.msh \
+LC.fa.msh \
+LDR.fasta.msh \
+LW.fa.msh \
+Meishan.genome.fasta.msh \
+Min.genome.fasta.msh \
+MS.fa.msh \
+NX.fa.msh \
+Ossabaw.fasta.msh \
+PTR.fa.msh \
+Rongchang.genome.fasta.msh \
+Tibetan.genome.fasta.msh \
+TT.fa.msh \
+Wuzhishan.genome.fasta.msh \
+Yorkshire.genome.fasta.msh
+
+
+mash dist combined_sketch.msh combined_sketch.msh > combined_distance.tsv
