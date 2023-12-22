@@ -1,0 +1,30 @@
+setwd('G:/博士/泛基因组组/PGG-project/analysis/assemblies_stat/')
+library(tidyverse)
+library(ape)
+library(ggtree)
+
+disfile<-"combined_distance.tsv"
+datdis  <- read.table(disfile,header=FALSE, stringsAsFactors =FALSE)
+datdis
+
+colnames(datdis)  <- c("anim1","anim2","distr","comp4","comp5")
+
+datdis %>% 
+  mutate(anim1c=str_extract(anim1,pattern = "[A-z0-9]+"),
+         anim2c=str_extract(anim2,pattern = "[A-z0-9]+")) -> datdis
+
+
+datsel  <- datdis  %>% select(anim1c,anim2c, distr)
+datwide  <- datsel  %>% pivot_wider(names_from = anim2c, values_from = distr)
+
+datmat  <- as.matrix(datwide  %>% select(-anim1c))
+rownames(datmat)  <- datwide$anim1c
+
+datmat
+
+tr  <- nj(datmat)
+
+new.tr<-root(tr,outgroup = "AW")
+ggtree(new.tr)+
+  geom_tiplab()+
+  xlim(NA,0.01)
