@@ -1,0 +1,5 @@
+#bam file must be sorted
+ls *bam | while read id;
+do
+bedtools bamtofastq -i $id -fq ${id}.R1.fq -fq2 ${id}.R2.fq 
+done
