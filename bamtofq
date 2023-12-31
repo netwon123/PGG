@@ -1,5 +1,6 @@
 #bam file must be sorted
 ls *bam | while read id;
 do
-bedtools bamtofastq -i $id -fq ${id}.R1.fq -fq2 ${id}.R2.fq 
+samtools sort -@ 4 -n $id -o ${id}.namesort.bam
+bedtools bamtofastq -i ${id}.namesort.bam -fq ${id}_R1.fq -fq2 ${id}_R2.fq
 done
