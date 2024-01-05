@@ -1,0 +1,8 @@
+setwd('G:/博士/泛基因组组/PGG-project/analysis/graph_statistic/')
+library(ggplot2)
+df=read.csv('len_25assemblies.txt',sep = '\t')
+ggplot(df, aes(Accession.number,Total.length))+
+  geom_col(aes(fill=Sequencing.platform))+
+  scale_fill_manual(values = c("#82b0d2","#F17F6F"))+
+  coord_flip()+geom_hline(yintercept = 2.435278676, linetype="dashed", color = "black")+theme_classic()
+options(scipen=200)
