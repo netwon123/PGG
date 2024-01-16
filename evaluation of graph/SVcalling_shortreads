@@ -1,0 +1,33 @@
+#delly
+delly call -n  -g ~/PGG_netwon/final_merge/backone_genome/backone.fa $id -o ${id}.delly.bcf
+
+#whamg
+/public/home/baoqi/software/wham/bin/whamg -x 6 -a ~/PGG_netwon/final_merge/backone_genome/backone.fa -f $id > ${id}.whamg.bcf
+
+#lumpy
+ls *rmM.bam | while read id;
+do
+~/software/lumpy-sv-0.3.1/scripts/extractSplitReads_BwaMemic/home/baoqi/software/wham/bin/whamg -x 6 -a ~/PGG_netwon/final_merge/backone_genome/backone.fa -f $id > ${id}.whamg.bcf
+samtools view -b -F 1294 $id > ${id}.discordants.unsorted.bam
+samtools view -h $id \
+    | ~/software/lumpy-sv-0.3.1/scripts/extractSplitReads_BwaMem  -i stdin \
+    | samtools view -Sb - \
+    > ${id}.splitters.unsorted.bam
+done
+
+
+ls *.discordants.unsorted.bam | while read id;
+do
+samtools sort -@ 4 $id -o ${id}.discordants.sort.bam
+done
+
+ls *splitters.unsorted.bam | while read id;
+do
+samtools sort -@ 4  $id -o ${id}.sample.splitters.sort.bam
+done
+
+
+#manta
+python /public/home/baoqi/software/manta-1.6.0.centos6_x86_64/bin/configManta.py --bam 01_10x.bam_rmM.bam \
+--referenceFasta ~/PGG_netwon/final_merge/backone_genome/backone.fa --runDir manta_01_10x
+python manta_01_10x/runWorkflow.py  -m local -j 8
