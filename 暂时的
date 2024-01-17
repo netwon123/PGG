@@ -1,0 +1,1 @@
+bcftools query -f '%CHROM\t%POS\t%ID\t%INFO/SVTYPE\n' graph_srdedup18_forcons.vcf > graph_Sv.stats
