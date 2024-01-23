@@ -57,14 +57,36 @@ sfile = paste0("admix.",2:4,".Q")
 slist <- readQ(sfile,indlabfromfile = T)
 
 ##draw by group
-pop <- read.table("group3.txt",header = F,sep = "\t",stringsAsFactors = F,row.names = 1)
-plotQ(slist,imgoutput = "join",imgtype = "pdf",height = 1.2,width = 20,clustercol=c("#8ECFC9", "#82B0D2", "#FA7F6F", "#FFBE7A"),indlabsize = 2,
-      showindlab = T,useindlab = T,sharedindlab = T,
-      showsp = T,sppos ="left",splab= paste0("K=",2:4),splabangle = 180,grplabalpha=0.75,sortind="label",
-      showlegend = F,ordergrp = T,grplab = pop,
-      
-      outputfilename = paste0("admixture_barplot_pop"),units = "cm",
-      exportpath = getwd())
+op <- read.table("group.txt",header = F,sep = "\t",stringsAsFactors = F,row.names = 1)
+plotQ(slist,imgoutput = "sep",imgtype = "pdf",height = 2,width = 20,indlabsize = 2,
+showindlab = T,useindlab = T,sharedindlab = T,clustercol=co,
+showsp = T,sppos ="left",splab= paste0("K=",13),splabangle = 180,sortind="label",
+showlegend = F,ordergrp = T,grplab = pop,
+outputfilename = paste0("13"),units = "cm",
+exportpath = getwd())
+co=c(
+"#c1dfc4",
+"#BBFFFF",
+"#8ECFC9",
+"#66CDAA",
+"#C1FFC1",
+"#B42B51",
+"#698B69",
+"#BCEE68",
+"#FA7F6F",
+"#FF6A6A",
+"#2E8B57",
+"#96CDCD","#43CD80")
+color =c("#8ECFC9", "#82B0D2", "#FA7F6F", "#FFF68F")
+##draw by group
+pop <- read.table("group.txt",header = F,sep = "\t",stringsAsFactors = F,row.names = 1)
+plotQ(slist,imgoutput = "sep",imgtype = "pdf",height = 2,width = 20,indlabsize = 2,
+showindlab = T,useindlab = T,sharedindlab = T,clustercol=co,
+showsp = T,sppos ="left",splab= paste0("K=",13),splabangle = 180,sortind="label",
+showlegend = F,ordergrp = T,grplab = pop,
+outputfilename = paste0("13"),units = "cm",
+exportpath = getwd())
+
 
 #culumative line
 
