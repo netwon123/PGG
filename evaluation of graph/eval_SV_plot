@@ -1,0 +1,25 @@
+library(readxl)
+library(tidyverse)
+library(plotrix)
+library(ggh4x)
+setwd('G:/博士/泛基因组组/PGG-project/analysis/WGS_hifi_clr/')
+dat<-read_excel("sv_eval_5sample.xlsx")
+dat %>% 
+  rowwise() %>% 
+  mutate(mean_value=mean(c_across(rep1:rep5)),
+         std_value=std.error(c_across(rep1:rep5)))-> new.dat
+
+
+ggplot(data=new.dat,aes(x=depth,y=mean_value))+
+  geom_point(aes(color=group),size=2)+geom_line(aes(color=group),size=1)+geom_errorbar(aes(ymin=mean_value-std_value,
+                    ymax=mean_value+std_value,
+                    color=group),
+                width=0.5,
+                size=1)+
+  scale_color_manual(values = c("VG-Giraffe"="#FA7F6F",
+                                "Manta"="#8ECFC9",
+                                "Delly"="#FFBE7A",
+                                "Whamg"='#82b0d2',
+                                "Lumpy"='#BEB8DC'))+
+  theme_classic()+
+  labs(x="Sequencing depth",y="F1 score")
