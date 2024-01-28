@@ -1,0 +1,26 @@
+library(ggplot2)
+
+library(ggbeeswarm)
+setwd('G:/博士/泛基因组组/PGG-project/analysis/WGS_hifi_clr/')
+
+co =c('#BEB8DC',"#8ECFC9", "#FA7F6F","#82B0D2", "#FFBE7A")
+df <- read.table('mapped_rato.txt',header = T)
+
+
+library(ggsignif) # Significance Brackets for 'ggplot2'
+
+  
+  ggplot(df, aes(group,value))+
+    geom_boxplot(aes(fill=group), color = "black",width = 0.3) +
+    geom_signif(comparisons = list(c("linear", "pan")),
+                map_signif_level=T, 
+                size=0.8, textsize = 6, 
+                test = "t.test") +
+    geom_point(aes(color = group), size = 3, position = position_jitter(width = 0.2),alpha = 0.5) +
+    stat_boxplot(geom = "errorbar", 
+                 width = 0.1, 
+                 size = 0.7, 
+                 color = "black") +
+    scale_fill_manual(values = c( "#8ECFC9","#FA7F6F")) +
+    scale_color_manual(values = c("#8ECFC9","#FA7F6F"))+theme_classic()+labs(y="Proportion of reads aligned perfectly")
+  
