@@ -19,3 +19,6 @@ vcftools --maf 0.05 --max-missing 0.3 --recode --recode-INFO-all --vcf pop_final
 
 #admixture
 for K in 2 3 4; do admixture -j16 --cv admix.bed $K | tee log${K}.out; done
+
+#fst
+vcftools --vcf pop_miss03_maf005.recode.vcf --weir-fst-pop ead.txt --weir-fst-pop eaw.txt --out fst_ead_eaw  --fst-window-size 1000000 --fst-window-step 500000
