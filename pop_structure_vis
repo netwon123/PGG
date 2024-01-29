@@ -104,31 +104,45 @@ ggplot(df, aes( x=samples, y = num)) +theme_bw()+ geom_smooth(se = FALSE,color='
 #-----堆叠图
 
 library(ggplot2)
-
+setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/SV_num/')
 library(dplyr)
+library(reshape2)
 library(RColorBrewer)
- co =c('#BEB8DC',"#8ECFC9", "#FA7F6F","#82B0D2", "#FFBE7A")
- df <- read.table('duidie.txt',header = T)
- head(df)
- data<-melt(df,id.vars='name')
- head(data)
- # Calculate the total sum for each 'name'
- data_sum <- data %>%
-   group_by(name) %>%
-   summarise(total = sum(value)) %>%
-   arrange(desc(total)) %>%
-   pull(name)
- 
- # Reorder the 'name' factor based on the total sum
- data$name <- factor(data$name, levels = data_sum)
- 
- # Create the stacked bar chart
- ggplot(data, aes(x = name, y = value, fill = variable)) +
-   geom_bar(position = "stack", stat="identity", color = 'white', alpha = 0.75, width = 1) +
-   scale_y_continuous(labels = scales::comma, expand = c(0,0)) +scale_fill_manual(values = co)+
-     theme_+theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1,size = 3.5)) +
-    ylab("Count")
- 
+co =c('#BEB8DC',"#8ECFC9", "#FA7F6F","#82B0D2", "#FFBE7A")
+
+df <- read.table('sv_count.txt', header = TRUE)
+
+# 读取分组文件
+groups <- read.table('group.txt', header = TRUE)
+
+# 合并数据和分组信息
+df <- merge(df, groups, by = 'sample')
+
+# Melt the data
+data <- melt(df, id.vars = c('sample', 'group'))
+
+# Calculate the total sum for each 'name' within each group
+data_sum <- data %>%
+  group_by(group, sample) %>%
+  summarise(total = sum(value)) %>%
+  arrange(group, desc(total)) %>%
+  pull(sample)
+
+# Reorder the 'sample' factor based on the total sum within each group
+#data$sample <- factor(data$sample, levels = data_sum)
+
+# Create the grouped stacked bar chart with group separation
+ggplot(data, aes(x = sample, y = value, fill = variable)) +
+  geom_bar(stat = "identity", color = 'white', width = 1) +
+  scale_y_continuous(labels = scales::comma, expand = c(0, 0)) +
+  scale_fill_manual(values = co) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 3.5),
+        panel.spacing = unit(2, "lines")) +  # Adjust the spacing between panels
+  facet_grid(. ~ group, scales = 'free_x', space = 'free_x', switch = 'x') +
+  ylab("Count")
+
+
 #-----------------svlen--------------
 setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/')
 library(ggplot2)
