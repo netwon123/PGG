@@ -22,3 +22,8 @@ for K in 2 3 4; do admixture -j16 --cv admix.bed $K | tee log${K}.out; done
 
 #fst
 vcftools --vcf pop_miss03_maf005.recode.vcf --weir-fst-pop ead.txt --weir-fst-pop eaw.txt --out fst_ead_eaw  --fst-window-size 1000000 --fst-window-step 500000
+
+#pi
+vcftools --vcf pop_miss03_maf005.recode.vcf --keep eaw.txt  --recode --out ead
+
+vcftools --vcf ead.recode.vcf --window-pi 1000000 --window-pi-step 500000 --out  ead
