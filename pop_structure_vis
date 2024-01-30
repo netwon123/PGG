@@ -142,6 +142,16 @@ ggplot(data, aes(x = sample, y = value, fill = variable)) +
   facet_grid(. ~ group, scales = 'free_x', space = 'free_x', switch = 'x') +
   ylab("Count")
 
+#-----pie-----------
+
+ratio <- c(0.019490172,0.333702986,0.58390927,0.031258595,0.031638977)
+disease <- c('INV','DEL','INS','DUP','TRA')
+co =c('#BEB8DC', "#FA7F6F","#8ECFC9", "#82B0D2","#FFBE7A")
+pie(ratio, labels=disease,
+    radius = 1.0,clockwise=T,col = co,border = NA,
+    main = "Male individuals")
+
+
 
 #-----------------svlen--------------
 setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/')
