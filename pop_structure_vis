@@ -201,3 +201,7 @@ ggplot(data_sv_group, aes(x = SVTYPE, y = freq, fill = group)) +
   xlab("") + 
   ylab("")+theme(panel.grid=element_blank())
 
+#----sv num cumulation---------
+df <- read.table('cu.txt', header = TRUE)
+ggplot(data = df, aes(x = sample, y = num)) + geom_point(colour='#E7DAD2',position = "jitter",size=3)+
+  geom_smooth(method = "loess", se = TRUE, span = 0.3, color = "#FA7F6F",size=1.5) +theme_classic()
