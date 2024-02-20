@@ -133,7 +133,7 @@ data_sum <- data %>%
 
 # Create the grouped stacked bar chart with group separation
 ggplot(data, aes(x = sample, y = value, fill = variable)) +
-  geom_bar(stat = "identity", color = 'white', width = 1) +
+  geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma, expand = c(0, 0)) +
   scale_fill_manual(values = co) +
   theme_classic() +
@@ -205,3 +205,29 @@ ggplot(data_sv_group, aes(x = SVTYPE, y = freq, fill = group)) +
 df <- read.table('cu.txt', header = TRUE)
 ggplot(data = df, aes(x = sample, y = num)) + geom_point(colour='#E7DAD2',position = "jitter",size=3)+
   geom_smooth(method = "loess", se = TRUE, span = 0.3, color = "#FA7F6F",size=1.5) +theme_classic()
+
+#--------shared-nonredundant----------------------
+
+df <- read.table('share-nored.txt', header = TRUE)
+
+
+data<-melt(df,id.vars='sample')
+head(data)
+# Calculate the total sum for each 'name'
+data_sum <- data %>%
+  group_by(sample) %>%
+  summarise(total = sum(value)) %>%
+  pull(sample)
+# Reorder the 'name' factor based on the total sum
+data <- data[order(data$variable), ]
+data$name <- factor(data$sample, levels = data_sum)
+# Create the stacked bar chart
+
+ggplot(data, aes(x = name, y = value, fill = variable)) +
+  geom_bar(position = "stack", stat="identity") +
+  scale_y_continuous(labels = scales::comma, expand = c(0,0)) +scale_fill_manual(values = co)+
+  theme_classic()+theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1,size = 4)) +
+  ylab("Count")
+
+
+
