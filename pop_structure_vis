@@ -230,4 +230,13 @@ ggplot(data, aes(x = name, y = value, fill = variable)) +
   ylab("Count")
 
 
+#--------sv_repeat----------
+stat1 <- read.csv('sv_repeat.bed', stringsAsFactors = FALSE,sep = '\t')
+library(ggplot2)
 
+stat1$TYPE <- factor(stat1$TYPE, levels = c("Low_complexity", "Simple_repeat", "Satellite",'SINE','LINE','LTR','DNA','RNA','RC','None'))
+
+co =c('#E7DAD2',"#82B0D2", "#FFBE7A","#FA7F6F", "#8ECFC9","#BBFFFF","#43CD80","#C1FFC1","#c1dfc4",'#bdbdbd')
+
+ggplot(data=stat1, aes(x=abs(SVLEN), fill = TYPE)) +
+  geom_histogram(bins = 100)+scale_fill_manual(values=co)+theme_classic()+ scale_y_continuous(trans = 'log10')
