@@ -33,7 +33,7 @@ do
 done
 #2.get the location of all type
 python extract_SVLEN.py
-bedtools flank -i filted_pop.bed -g genome -b 2500  > masked_regions.bed
+bedtools slop -i filted_pop.bed -g genome -r 2500 -l 2500 -s  > masked_regions.bed
 bedtools sort -i  masked_regions.bed > masked_regions_sort.bed
 bedtools merge -i  masked_regions_sort.bed > masked_regions_over.bed
 SURVIVOR filter filtered_pop.vcf masked_regions_over.bed 50 100000 0.05 -1 output.vcf
