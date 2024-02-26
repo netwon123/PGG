@@ -238,5 +238,13 @@ stat1$TYPE <- factor(stat1$TYPE, levels = c("Low_complexity", "Simple_repeat", "
 
 co =c('#E7DAD2',"#82B0D2", "#FFBE7A","#FA7F6F", "#8ECFC9","#BBFFFF","#43CD80","#C1FFC1","#c1dfc4",'#bdbdbd')
 
+#-------sv af--------------
+
+ggplot(data=data, aes(x=AF,fill=SVTYPE)) +
+  geom_histogram(bins=100) +
+  theme_classic()+scale_fill_manual(values=c("INS" = "#8ECFC9", "INV" = "#82B0D2", "DEL" = "#FA7F6F",'DUP'='#FFBE7A','BND'='#BEB8DC')) +xlab('AF') + 
+  ylab("SV Count") +scale_y_continuous(trans = 'log10')
+
+
 ggplot(data=stat1, aes(x=abs(SVLEN), fill = TYPE)) +
   geom_histogram(bins = 100)+scale_fill_manual(values=co)+theme_classic()+ scale_y_continuous(trans = 'log10')
