@@ -19,7 +19,7 @@ ggplot(data=new.dat,aes(x=depth,y=mean_value))+
   scale_color_manual(values = c("VG-Giraffe"="#FA7F6F",
                                 "Manta"="#8ECFC9",
                                 "Delly"="#FFBE7A",
-                                "Whamg"='#82b0d2',
+                                "Wham"='#82b0d2',
                                 "Lumpy"='#BEB8DC'))+
   theme_classic()+
   labs(x="Sequencing depth",y="F1 score")
