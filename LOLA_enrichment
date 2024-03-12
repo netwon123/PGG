@@ -1,0 +1,20 @@
+library(ggplot2)
+setwd('G:/PGG-project/analysis/SV stats/SV_repeat/svpos/')
+library(LOLA)
+library(qvalue)
+library(IRanges)
+library(GenomicRanges)
+dbPath="G:/PGG-project/analysis/SV stats/SV_repeat/fisherCHR/"
+regionDB = loadRegionDB(dbPath)
+
+
+
+
+queryA=readBed('masked_f100_inv.pos.bed')
+
+userUniverse=readBed('masked_f100_sv.pos.bed')
+
+
+result = runLOLA(queryA, userUniverse, regionDB)
+writeCombinedEnrichment(result, "enrich_inv")
+plotTopLOLAEnrichments(result)
