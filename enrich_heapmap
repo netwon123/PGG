@@ -1,0 +1,44 @@
+library(pheatmap)
+setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/SV_repeat/svpos/')
+ins <- read.table("heatmap_ins.txt",header = T, row.names = 1)
+p1=pheatmap(ins,
+         fontsize = 8,
+         fontsize_row = 6,
+         fontsize_col = 7,
+         cellwidth = 15,
+         cellheight= 15,border=F,color=colorRampPalette(c('#8ECFC9','#FA7F6F'))(5),
+         treeheight_col=20,
+         treeheight_row =20)
+del <- read.table("heatmap_del.txt",header = T, row.names = 1)
+p2=pheatmap(del,
+         fontsize = 8,
+         fontsize_row = 6,
+         fontsize_col = 7,
+         cellwidth = 15,
+         cellheight= 15,border=F,color=colorRampPalette(c('#8ECFC9','#FA7F6F'))(5),
+         treeheight_col=20,
+         treeheight_row =20)
+
+inv <- read.table("heatmap_inv.txt",header = T, row.names = 1)
+p3=pheatmap(inv,
+            fontsize = 8,
+            fontsize_row = 6,
+            fontsize_col = 7,
+            cellwidth = 15,
+            cellheight= 15,border=F,color=colorRampPalette(c('#8ECFC9','#FA7F6F'))(5),
+            treeheight_col=20,
+            treeheight_row =20)
+
+dup <- read.table("heatmap_dup.txt",header = T, row.names = 1)
+p4=pheatmap(dup,
+            fontsize = 8,
+            fontsize_row = 6,
+            fontsize_col = 7,
+            cellwidth = 15,
+            cellheight= 15,border=F,color=colorRampPalette(c('#8ECFC9','#FA7F6F'))(5),
+            treeheight_col=20,
+            treeheight_row =20)
+
+
+cowplot::plot_grid(p1$gtable, p2$gtable,p3$gtable,p4$gtable,ncol= 2,labels=LETTERS[1:4])
+
