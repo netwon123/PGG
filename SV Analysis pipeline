@@ -22,6 +22,16 @@ for K in 2 3 4; do admixture -j16 --cv admix.bed $K | tee log${K}.out; done
 
 #fst
 vcftools --vcf pop_miss03_maf005.recode.vcf --weir-fst-pop ead.txt --weir-fst-pop eaw.txt --out fst_ead_eaw  --fst-window-size 1000000 --fst-window-step 500000
+#between-fst
+files=(AQ AW BKS BMA BM DRC EW GEH HAM JH LC LDR LW LWU MAS MS MZ PTR RC TT TUC WNH WZS)
+for ((i=0; i<${#files[@]}; i++)); do
+    for ((j=$i+1; j<${#files[@]}; j++)); do
+        file1=${files[$i]}.txt
+        file2=${files[$j]}.txt
+        output=${files[$i]}_${files[$j]}.fst
+        vcftools --vcf ../pop_miss03_maf005.recode.vcf --weir-fst-pop $file1 --weir-fst-pop $file2 --out $output --fst-window-size 1000000 --fst-window-step 500000
+    done
+done
 
 #pi
 vcftools --vcf pop_miss03_maf005.recode.vcf --keep eaw.txt  --recode --out ead
