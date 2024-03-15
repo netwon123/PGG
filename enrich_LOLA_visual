@@ -43,21 +43,14 @@ p4=pheatmap(dup,
 cowplot::plot_grid(p1$gtable, p2$gtable,p3$gtable,p4$gtable,ncol= 2,labels=LETTERS[1:4])
 
 #-----puple graph---
-library(reshape2)
+setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/SV_repeat/svpos/')
 library(ggplot2)
-setwd('G:/博士/泛基因组组/PGG-project/analysis/population_structure/fst/breed/')
-fst_data <- read.table("fst_all.txt",header = T)
+data <- read.table("enrich_repeat.txt",sep = "\t",header = T)
 
 
-
-# 使用reshape2包来整理数据
-
-fst_matrix <- dcast(fst_data, pop1 ~ pop2, value.var = "fst")
-fst_matrix <- fst_matrix[order(fst_matrix$pop1, fst_matrix$pop2), ]
-# 使用ggplot2绘制热图
-
-ggplot(data = fst_data, aes(x = pop1, y = pop2, fill = fst)) +
-  geom_tile() +
-  scale_fill_gradient(low = "#8ECFC9", high = "#FA7F6F") +  # 设置颜色渐变
-  theme_minimal() +
-  labs(title = "Two-by-Two Fst Values Heatmap", x = "Sample 1", y = "Sample 2")
+ggplot(data, aes(x=description, y=oddsRatio, size = qvalueLOG, color = type)) +
+  geom_point(shape = 16,alpha=0.9)+ 
+  scale_size(range = c(3, 10)) + 
+  labs(x ="repeat", y = "oddsRatio", size = "-LOG10(Q-value)",color='SV Type')+
+  theme_classic()+scale_color_manual(values = c("INS" = "#8ECFC9", "INV" = "#82B0D2", "DEL" = "#FA7F6F",'DUP'='#FFBE7A'))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,size = 8))
