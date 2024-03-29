@@ -233,10 +233,15 @@ ggplot(data, aes(x = name, y = value, fill = variable)) +
 #--------sv_repeat----------
 stat1 <- read.csv('sv_repeat.bed', stringsAsFactors = FALSE,sep = '\t')
 library(ggplot2)
-
-stat1$TYPE <- factor(stat1$TYPE, levels = c("Low_complexity", "Simple_repeat", "Satellite",'SINE','LINE','LTR','DNA','RNA','RC','None'))
+df <- read.table('anno2.txt', header = TRUE)
+df$TYPE <- factor(df$TYPE, levels = c("Low_complexity", "Simple_repeat", "Satellite",'SINE','LINE','LTR','DNA','RNA','RC','None'))
 
 co =c('#E7DAD2',"#82B0D2", "#FFBE7A","#FA7F6F", "#8ECFC9","#BBFFFF","#43CD80","#C1FFC1","#c1dfc4",'#bdbdbd')
+ggplot(data=df, aes(x=abs(SVLEN), fill = TYPE)) +
+  geom_histogram() + 
+  scale_x_continuous(trans = 'log10',breaks = c(100,300,2000,6000,100000),
+                     labels = c('100bp','300bp','2kb','6kb','100kb'),limits = c(50,100000)) + 
+  theme_classic()+scale_fill_manual(values = co)
 
 #-------sv af--------------
 
