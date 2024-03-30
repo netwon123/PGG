@@ -253,3 +253,72 @@ ggplot(data=data, aes(x=AF,fill=SVTYPE)) +
 
 ggplot(data=stat1, aes(x=abs(SVLEN), fill = TYPE)) +
   geom_histogram(bins = 100)+scale_fill_manual(values=co)+theme_classic()+ scale_y_continuous(trans = 'log10')
+
+#enrich
+setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/SV_repeat/SVxTE-length/')
+
+library(ggplot2)
+data <- read.table('repeat.txt',header = TRUE)
+# 绘制条形图
+
+  
+co=c(
+"#FFBE7A"
+,"#420516"
+,"#fc6076"
+,"#ff0844"
+,"#FA7F6F"
+,"#faaca8"
+,"#B42B51"
+,"#82B0D2"
+,"#c1dfc4"
+,"#96CDCD"
+,"#668B8B"
+,"#92FFC0"
+,"#00868B"
+,"#7FFFD4"
+,"#8ECFC9"
+,"#66CDAA"
+,"#C1FFC1"
+,"#9BCD9B"
+,"#698B69"
+,"#43CD80"
+,"#2E8B57"
+,"#BCEE68")             
+                                         
+
+
+
+
+ggplot(data, aes(x = type, y = fc, fill = type)) +
+  geom_bar(stat = "identity",color = "black") +
+  labs( y = "LOG2(FC)") +
+  theme_classic()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_fill_manual(values=co)+theme(legend.position = "none")+
+ geom_text(aes(label = "*"),  size = 6)
+
+
+
+data <- read.table('chrom.txt',header = TRUE)
+data$type <- factor(data$type, levels = c("E1_TssA", "E2_TssAHet", "E3_TxFlnk",'E4_TxFlnkWk','E5_TxFlnkHet','E6_EnhA','E7_EnhAMe','E9_EnhAHet','E10_EnhPois','E11_ATAC_Is','E12_TssBiv','E13_Repr','E14_ReprWk'))
+
+co=c(
+  "#c1dfc4",
+  "#BBFFFF",
+  "#8ECFC9",
+  "#66CDAA",
+  "#C1FFC1",
+  "#B42B51",
+  "#698B69",
+  "#BCEE68",
+  "#FA7F6F",
+  "#FF6A6A",
+  "#2E8B57",
+  "#96CDCD","#43CD80")
+
+ggplot(data, aes(x = type, y = fc, fill = type)) +
+  geom_bar(stat = "identity",color = "black") +
+  labs( y = "LOG2(FC)") +
+  theme_classic()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_fill_manual(values=co)+theme(legend.position = "none")+
+  geom_text(aes(label = "*"),  size = 6)
