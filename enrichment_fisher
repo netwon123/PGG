@@ -1,0 +1,39 @@
+#Annotated repeat for SV breakpoints
+#For insertions, we only considered the position of breakpoints. 
+#While for inversions, deletions, and duplications, we considered the entire SV region. 
+
+#for insertions
+awk '{print $1,$2-100,$2+100,$4,$5}' INS.bed  |sed 's/ /\t/g'>ins_f100.bed
+
+head noins.bed
+1       24955   25890   DEL     935
+1       28715   28779   DEL     64
+1       109441  118528  DEL     9087
+1       119875  119930  DEL     55
+1       174743  174817  DEL     74
+1       203190  203253  DEL     63
+1       232865  233021  DEL     156
+1       233048  233886  DEL     838
+1       234108  234296  DEL     188
+
+#for no-ins, set ID 'chr-start-end' for each two-breakpoints SV
+awk '{print $1,$2-100,$2+100,$4,$5,$1"-"$2"-"$3}' noins.bed  |sed 's/ /\t/g'>left.bed
+awk '{print $1,$3-100,$3+100,$4,$5,$1"-"$2"-"$3}' noins.bed  |sed 's/ /\t/g'> right.bed
+
+head left.bed
+1       24855   25055   DEL     935     1-24955-25890
+1       28615   28815   DEL     64      1-28715-28779
+1       109341  109541  DEL     9087    1-109441-118528
+1       119775  119975  DEL     55      1-119875-119930
+1       174643  174843  DEL     74      1-174743-174817
+1       203090  203290  DEL     63      1-203190-203253
+1       232765  232965  DEL     156     1-232865-233021
+1       232948  233148  DEL     838     1-233048-233886
+1       234008  234208  DEL     188     1-234108-234296
+1       248092  248292  DEL     132     1-248192-248324
+
+ls *sort.bed| while read id; do bedtools fisher -a ../break_f100_nobnd.bed.sort.bed -b $id -g ../../chr.size > ${id}.txt;done
+
+#using R to verify the result
+reult1=fisher.test(matrix(c(933,461407,11843,1847338), ncol=2))
+p_values=c(p.value,corrected_p_values = p.adjust(p_values, method='bonferroni')
