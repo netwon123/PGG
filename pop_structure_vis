@@ -322,3 +322,10 @@ ggplot(data, aes(x = type, y = fc, fill = type)) +
   theme_classic()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_fill_manual(values=co)+theme(legend.position = "none")+
   geom_text(aes(label = "*"),  size = 6)
+#---bubble
+ggplot(data, aes(x=description, y=oddsRatio, color = description,size=qvalue)) +
+  geom_point(shape = 16,size=5)+ 
+  labs( y = "LOG2(FC)")+
+  theme_classic()+
+ theme(legend.position = 'None')+scale_color_manual(values = colors)+xlab('')+
+  coord_flip()
