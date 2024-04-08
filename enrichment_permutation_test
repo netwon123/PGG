@@ -1,0 +1,21 @@
+library(doParallel)
+library(foreach)
+library(regioneR)
+library(LOLA)
+library(BSgenome.Sscrofa.UCSC.susScr11)
+setwd('./')
+
+my.regions <- readBed('../break_f100_nobnd.bed')
+repeat_files <- list.files(path = "./db_repeat", pattern = "*.bed", full.names = TRUE)
+results_list <- list()
+
+for (repeat_file in repeat_files) {
+  repeats <- readBed(repeat_file)
+  pt <- overlapPermTest(A=my.regions, B=repeats, ntimes=1000, non.overlapping=FALSE, genome='susScr11',force.parallel=16)
+
+  results_list[[repeat_file]] <- pt$numOverlaps$pval
+
+  print(pt)
+}
+
+p.adjust(results_list, method = "bonferroni")
