@@ -329,3 +329,13 @@ ggplot(data, aes(x=description, y=oddsRatio, color = description,size=qvalue)) +
   theme_classic()+
  theme(legend.position = 'None')+scale_color_manual(values = colors)+xlab('')+
   coord_flip()
+
+#----fst----------
+data <- read.table('fst_all_2.txt',header = TRUE,row.names = 1)
+x  <- as.matrix(data)
+treatment <- factor(c("EAD","EAW","WED","EAD","EAD","WED","EAD","EAD","EAD","WED","WED","EAD","EAD","EAD","EAD","WED","EAD","EAD","EAD","EAD","EAD"))
+plot_color = c('#8ECFC9','#82b0d2','#fa7f6f')[treatment]
+heatmap.2(x,trace="none",dendrogram="row",col=rev(colorRampPalette(c("#beb8dc","#E1DEDC"))(20)),RowSideColors  = plot_color,density.info=c("none"))
+
+#sv hotsplot
+heatmap.2(x,trace="none",dendrogram="none",Rowv=FALSE, symm=TRUE,col=rev(colorRampPalette(c("#060270","#E1DEDC"))(20)),density.info=c("none"))
