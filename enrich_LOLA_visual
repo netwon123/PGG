@@ -52,13 +52,3 @@ ggplot(data, aes(x=description, y=oddsRatio, size = qvalueLOG, color = type)) +
   labs(x ="repeat", y = "oddsRatio", size = "-LOG10(Q-value)",color='SV Type')+
   theme_classic()+scale_color_manual(values = c("INS" = "#8ECFC9", "INV" = "#82B0D2", "DEL" = "#FA7F6F",'DUP'='#FFBE7A'))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1,size = 8))
-
-#----fst----------
-data <- read.table('fst_all_2.txt',header = TRUE,row.names = 1)
-x  <- as.matrix(data)
-treatment <- factor(c("EAD","EAW","WED","EAD","EAD","WED","EAD","EAD","EAD","WED","WED","EAD","EAD","EAD","EAD","WED","EAD","EAD","EAD","EAD","EAD"))
-plot_color = c('#8ECFC9','#82b0d2','#fa7f6f')[treatment]
-heatmap.2(x,trace="none",dendrogram="row",col=rev(colorRampPalette(c("#beb8dc","#E1DEDC"))(20)),RowSideColors  = plot_color,density.info=c("none"))
-
-#sv hotsplot
-heatmap.2(x,trace="none",dendrogram="none",Rowv=FALSE, symm=TRUE,col=rev(colorRampPalette(c("#060270","#E1DEDC"))(20)),density.info=c("none"))
