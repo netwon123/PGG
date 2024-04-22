@@ -1,0 +1,5 @@
+ls *vcf | while read id; do truvari anno svinfo -m 50 $id -o ${id}.anno.vcf;done
+ls *anno.vcf | while read id;do awk '/^#/ || /SVTYPE=/' $id | grep -v 'UNK'> ${id}.indel.vcf;done
+#bgzip and tabix
+perl ~/software/panpop-main/bin/PART_run.pl --in_vcf 298merge_span_sv.vcf.gz -o OUTDIR_RUN1 -r ~/PGG_netwon/final_merge/backone_genome/backone.fa  -t 56 --tmpdir TMPDIR
+perl ~/software/panpop-main/bin/PART_run.pl --in_vcf OUTDIR_RUN1/3.final.vcf.gz -o OUTDIR_RUN2 -r ~/PGG_netwon/final_merge/backone_genome/backone.fa  -t 56 --tmpdir TMPDIR -not_first_merge
