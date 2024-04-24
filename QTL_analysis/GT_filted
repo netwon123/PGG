@@ -1,0 +1,7 @@
+#snp/indel
+gatk --java-options "-Xms32G -Xmx192G -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantFiltration -O test.snp.fil.vcf.temp -V span_298_snp_rename.vcf.gz --filter-expression 'QUAL < 30.0 || QD < 2.0 || FS > 60.0 ||  SOR > 4.0' --filter-name lowQualFilter --cluster-window-size 10  --cluster-size 3 --missing-values-evaluate-as-failing
+gatk --java-options "-Xms32G -Xmx192G -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" SelectVariants -R ~/PGG_netwon/final_merge/backone_genome/backone.fa -V test.snp.fil.temp --exclude-filtered -O span_298_snp_rename.fQual.vcf
+
+
+#SV/SNP/indel-removing genotypes with a call rate <0.7 or an MAF < 0.05.
+vcftools --out pca_miss03_maf005.vcf  --min-alleles 2 --max-alleles 2 --vcf ../pop_filted2.vcf --recode --recode-INFO-all --max-missing 0.3 --maf 0.05
