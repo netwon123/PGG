@@ -1,0 +1,39 @@
+library(Rtsne)
+library(ggplot2)
+library(proxy)
+
+setwd('G:/博士/泛基因组组/PGG-project/analysis/eqtl/')
+expr_matrix=read.csv('TPM_all.csv',row.names = 1)
+cor_matrix <- cor(expr_matrix,method="pearson")
+write.csv(cor_matrix, "correlation_matrix.csv")
+#visualized the heatmap
+data <- read.csv('correlation_matrix.csv',header = TRUE,row.names = 1)
+x  <- as.matrix(data)
+treatment=factor(c( ...))
+plot_color = c('#420516','#fc6076','#96CDCD','#00868B')[treatment]
+heatmap.2(x,trace="none",dendrogram="both",col=rev(colorRampPalette(c("#ffbe7a","#8ecfc9"))(20)),density.info=c("none"),RowSideColors  = plot_color,labRow = FALSE, labCol = FALSE)
+
+
+#t-sne
+ 计算 Pearson 相关系数
+correlation_matrix <- cor(expr_matrix)
+
+# 计算距离矩阵（使用 1 - r）
+distance_matrix <- 1 - correlation_matrix
+
+# 使用 t-SNE 进行降维
+tsne_result <- Rtsne(as.matrix(distance_matrix))
+
+# 提取降维后的坐标
+tsne_coords <- tsne_result$Y
+
+# 创建一个数据框，包含降维后的坐标
+tsne_df <- data.frame(tsne_x = tsne_coords[, 1],
+                      tsne_y = tsne_coords[, 2])
+
+# 使用 ggplot2 绘制 t-SNE 可视化图
+ggplot(tsne_df, aes(x = tsne_x, y = tsne_y,color=plot_color)) +
+  geom_point(size = 3) +
+  labs(title = "t-SNE Visualization",
+       x = "t-SNE 1",
+       y = "t-SNE 2")+theme_bw()+scale_color_manual(values=c('#2e9fdf','#00adbb','#fc4e07','#e7b800'))
