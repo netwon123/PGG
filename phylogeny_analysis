@@ -6,3 +6,42 @@ plink2 --vcf ../ont203.snp_q20_dp2.recode.vcf --geno 0.1 --maf 0.05 --indep-pair
 
 #sv
 plink2 --vcf ../pop_final.vcf --geno 0.3--maf 0.05 --make-bed --out ont203_sv  --max-alleles 2
+
+
+#tree constructed by phylip-3.697
+
+#visualization
+
+setwd('G:/博士/泛基因组组/PGG-project/analysis/population_structure/tree')
+
+
+
+library(phytools)
+library(dendextend)
+library(viridis)
+library(dplyr)
+library(phylogram)
+
+tree1 <- read.tree(file = "snp.outtree")
+tree1 <- midpoint.root(tree1)
+tree2 <- read.tree(file = "sv.outtree")
+tree2 <- midpoint.root(tree2)
+tree1 <- compute.brlen(tree1)
+tree2 <- compute.brlen(tree2)
+tree1<- as.dendrogram(tree1)
+tree1
+tree2<- as.dendrogram(tree2)
+dndlist <- dendextend::dendlist(tree1, tree2)
+color_lines =c("#FFBE7A",
+"#420516",
+"#fc6076",
+"#2E8B57",
+"#BCEE68",
+"#FFF68F")
+
+dendextend::tanglegram(dndlist, common_subtrees_color_branches  = FALSE,highlight_branches_lwd =FALSE,highlight_distinct_edges  =FALSE,highlight_branches_col =FALSE,
+                       axes =TRUE,common_subtrees_color_lines_default_single_leaf_color = "grey",common_subtrees_color_lines =TRUE,lwd =1,edge.lwd =2,color_lines ='black',
+                       lab.cex = 0.6, margin_inner   = 3.5)
+dev.copy(pdf, 'comparetree.pdf', width = 14, height = 14)
+dev.off()
+ 
