@@ -9,6 +9,14 @@ plink2 --vcf ../pop_final.vcf --geno 0.3--maf 0.05 --make-bed --out ont203_sv  -
 
 
 #tree constructed by phylip-3.697
+awk '{print $2"           "}' 58inds_maf005_geno01_phased.mdist.id | cut -c1-10 > 58inds_maf005_geno01_phased_phylip.id 
+###合并数据矩阵并添加表头（即物种个数58）
+paste -d '' 58inds_maf005_geno01_phased_phylip.id 58inds_maf005_geno01_phased.mdist | sed '1i 58' > 58inds_maf005_geno01_phased_phylip.mdist
+neighbor
+#brance len
+nw_distance *nwk
+
+
 
 #visualization
 
