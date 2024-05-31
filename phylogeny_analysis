@@ -52,4 +52,22 @@ dendextend::tanglegram(dndlist, common_subtrees_color_branches  = FALSE,highligh
                        lab.cex = 0.6, margin_inner   = 3.5)
 dev.copy(pdf, 'comparetree.pdf', width = 14, height = 14)
 dev.off()
- 
+ #--box
+len=read.table('brance_len.txt',header = TRUE)
+# 
+# 绘制箱线图
+par(pin=c(2,3))
+boxplot(len$snp, len$sv, names = c("SNP", "SV"), ylab = "Branch length",col = c("#82b0d2", "#FFBE7A"))
+
+# 执行Wilcoxon秩和检验
+result <- wilcox.test(len$snp, len$sv)
+
+# 显著性水平标记
+if(result$p.value < 0.001) {
+  signif <- "***"
+} else {
+  signif <- ""
+}
+
+# 添加显著性标记
+text(x = 1.5, y = max(len$snp, len$sv), labels = signif, cex = 2)
