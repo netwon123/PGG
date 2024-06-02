@@ -1,0 +1,26 @@
+# 加载ggplot2库
+library(ggplot2)
+
+# 数据
+categories <- c('SINEs/MIRs', 'LINEs/LINE1', 'LINEs/LINE2', 'LINEs/L3/CR1', 'LTR/ERVL', 
+                'LTR/ERVL-MaLRs', 'LTR/ERV_classI', 'LTR/ERV_classII', 'DNA/hAT-Charlie', 
+                'DNA/TcMar-Tigger', 'Unclassified', 'Small_RNA', 'Satellites', 'Simple_repeats', 
+                'Low_complexity')
+
+INS <- c(4708, 96712, 5712, 498, 2830, 3933, 6805, 1760, 2429, 1314, 49, 153487, 1275, 23039, 1552)
+DEL <- c(5966, 83948, 7492, 712, 3573, 4888, 5507, 827, 3134, 1588, 94, 95073, 596, 9700, 1398)
+
+# 创建数据框
+data <- data.frame(categories, INS)
+data2 <- data.frame(categories, DEL)
+
+# 绘制柱状图
+p1=ggplot(data, aes(x = categories, y = INS)) +
+  geom_bar(stat = "identity", fill = "#fa7f6f") +
+  labs(y = "INS", title = "Insertions by Category", x = "Categories") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ coord_flip()+theme_classic()+ geom_text(aes(label = INS), vjust = -0.5, color = "black", size = 3,position = position_dodge(width = 0.9))
+p2=ggplot(data2, aes(x = categories, y = -DEL)) +
+  geom_bar(stat = "identity", fill = "#beb8dc") +
+  labs(y = "DEL", title = "Insertions by Category", x = "Categories") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ coord_flip()+theme_classic()+  geom_text(aes(label = DEL), vjust = -0.5, color = "black", size = 3,position = position_dodge(width = 0.9)) 
+ plot_grid(p1, p2, ncol = 2, align = 'v', axis = 'tb')
