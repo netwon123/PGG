@@ -1,0 +1,40 @@
+# 加载ggplot2包
+library(ggplot2)
+
+# 设置数据
+data <- data.frame(
+  type = c("SINEs", "LINEs", "LTR", "DNA", "Unclassified", "RNA", "Satellites", "Simple_repeats", "Low_complexity"),
+  Genomewide=c(14.19115938,	21.32214015	,4.713581822,	2.448053273,	0.027179484,	0.018510652	,0.237529063,	1.189447214	,0.228614817
+),
+  INS = c(11.04, 40.5, 2.4, 0.33, 0, 10.86, 1.68, 1.5, 0.12),
+  DEL = c(9.55, 32.16, 2.78, 0.61, 0.01, 9.18, 0.52, 0.91, 0.07)
+  )
+co=c(
+  
+  "#ffbe7a","#fa7f6f",
+  "#8ECFC9",
+  "#82b0d2",
+  "#beb8dc",
+  "#e7dad2",
+  "#698B69",
+  "#BCEE68",
+  "#ff0844")
+# 将数据从宽格式转换为长格式
+data_long <- tidyr::pivot_longer(data, cols = c(INS, DEL,Genomewide), names_to = "Mutation_Type", values_to = "Percentage")
+
+# 创建分面柱状图并在柱子上展示数字
+ggplot(data_long, aes(x = type, y = Percentage, fill = type, label = sprintf("%.2f%%", Percentage))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(position = position_dodge(width = 0.9),    # 将文本标签放置在柱子中心
+            vjust = -0.5,                             # 垂直方向上向上移动一些
+            size = 3,                                 # 设置文本大小
+            aes(group = Mutation_Type),              # 使用 Mutation_Type 分组
+            color = "black") +                        # 设置文本颜色
+  labs(y = "Percentage") +
+  facet_wrap(~Mutation_Type, scales = "free_y") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,size=15)) +
+  ggtitle("Distribution of Repeat Element Types by Mutation Type") +
+  ylim(0, 50) +
+  guides(fill = FALSE) +
+  scale_fill_manual(values = co)
