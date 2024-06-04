@@ -339,3 +339,45 @@ heatmap.2(x,trace="none",dendrogram="row",col=rev(colorRampPalette(c("#beb8dc","
 
 #sv hotsplot
 heatmap.2(x,trace="none",dendrogram="none",Rowv=FALSE, symm=TRUE,col=rev(colorRampPalette(c("#060270","#E1DEDC"))(20)),density.info=c("none"))
+
+
+#ld
+#modifiy id in vcf
+python modifIDinvcf.py chr3.snp.filter.impute.vcf chr3.snp.filter.impute.edited.vcf
+
+setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/SV_ld')
+library(data.table)
+library(tidyverse)
+dat.ld<-fread("snp_sv_chr1.ld.ld.gz")
+dat.ld%>%filter(abs(BP_A-BP_B)<=50000) -> dat.ld
+
+dat.ld %>% head() 
+
+dat.ld.new<-dat.ld %>% 
+  mutate(group=paste0(str_extract(SNP_A,pattern = "[A-Za-z]+$"),
+                      "_",
+                      str_extract(SNP_B,pattern = "[A-Za-z]+$")))
+
+dat.ld.new %>% 
+  mutate(new_group=case_when(
+    group == "SNP_SV"|group=="SV_SNP" ~ "SNP_SV",
+    group == "INDEL_SV"|group=="SV_INDEL" ~ "INDEL_SV",
+    group == "SNP_SNP" ~ "SNP_SNP",
+    group == "SV_SV" ~ "SV_SV",
+    TRUE ~ "OTHERS"
+  )) -> dat.ld.new
+
+
+
+
+ggplot(data=dat.ld.new %>% filter(new_group=="SNP_SV"),
+       aes(x=R2))+
+  geom_histogram(aes(y=after_stat(count / sum(count))),
+                 bins = 150,
+                 color="grey",
+                 fill="#beb8dc")+
+  ylim(NA,0.025)+
+  geom_vline(xintercept = 0.7, linetype = "dashed", color = "black") +  # 添加竖直虚线
+  theme_+
+  theme(panel.grid = element_blank())+
+  labs(title = "SNP_SV")
