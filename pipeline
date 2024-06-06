@@ -1,0 +1,2 @@
+#filted ont snp 
+vcftools --minDP 2 --minQ 20  --recode --recode-INFO-all --vcf ont208.snp.rn.vcf --out ont208.snp_q20_dp2
