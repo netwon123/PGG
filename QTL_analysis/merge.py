@@ -19,7 +19,7 @@ with open(os.path.join(folder_path, output_file), 'w') as output:
 
     for file in files:
         with open(file, 'r') as f:
-            next(f)
+#            next(f)
 
 
 
