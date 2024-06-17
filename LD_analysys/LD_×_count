@@ -14,3 +14,9 @@ do
 --ld-window-r2 0 \
 --out LD_${id} --threads 8
 done
+
+
+awk '{print $3, $6, $7}' LD.file > LD.r2.txt
+python trans_colname.py LD.r2.txt LD.r2_sv-snp.txt
+
+#get the max r2 of each SV
