@@ -1,0 +1,9 @@
+ ~/software/plink --vcf pop_del.vcf.simple.vcf.gz --make-bed --out plink_del --allow-extra-chr --freq
+ awk '$5>=0.05' plink_del.frq > plink_del_more005.txt
+ awk '$5 < 0.05' plink_del.frq > plink_del_less005.txt
+ 
+awk 'NR > 1 { print $2 }' plink_del_more005.txt > maf_more_005/del_common.id
+awk 'NR > 1 { print $2 }' plink_del_less005.txt > maf_less_005/del_rare.id
+
+
+/public/home/baoqi/SV_analysis_part2/analysis_ld/PopLDdecay-3.42/bin/PopLDdecay -InVCF $id  -OutStat ${id}_ld -MAF 0
