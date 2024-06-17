@@ -1,0 +1,14 @@
+
+bcftools concat sv.vcf.gz snp.vcf.gz --Oz o sv-snp.vcf.gz 
+
+ls *simple.vcf.gz_snp.vcf.gz | while read id;
+do
+~/software/plink --vcf $id --chr 1 \
+--double-id \
+--allow-extra-chr \
+-r2 gz \
+--ld-window 10 \
+--ld-window-kb 1000 \
+--ld-window-r2 0 \
+--out LD_${id} --threads 8
+done
