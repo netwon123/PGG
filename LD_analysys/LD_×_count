@@ -1,3 +1,5 @@
+python simple_vcf.py sv.raw.vcf sv.vcf
+python simple_vcf.py snp.raw.vcf snp.vcf
 
 bcftools concat sv.vcf.gz snp.vcf.gz --Oz o sv-snp.vcf.gz 
 
