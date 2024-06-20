@@ -1,1 +1,31 @@
-d
+ls /public/home/baoqi/SRWHS/trans/fastq/fastqall/*_1_clean.fq.gz | while read i;
+do
+i=${i/_1_clean.fq.gz/}
+STAR --runThreadN 16 \
+--genomeDir /public/home/yiguoqiang/starGenome  \
+--sjdbGTFfile /public/home/yiguoqiang/starGenome/Sus_scrofa.Sscrofa11.1.100.gtf \
+--quantMode TranscriptomeSAM \
+--outSAMtype BAM SortedByCoordinate \
+--outSAMunmapped Within \
+--readFilesCommand zcat \
+--outFilterMismatchNmax 3 \
+--readFilesIn ${i}_1_clean.fq.gz ${i}_2_clean.fq.gz \
+--outFileNamePrefix ./${i}-STAR
+--outTmpDir /public/home/yiguoqiang/trans/jx/tmp
+--limitBAMsortRAM 120000000000
+done
+
+
+# TPM quantification
+ls *bam | while read id;
+do
+stringtie -p 16 -e -B -G /public/home/yiguoqiang/starGenome/Sus_scrofa.Sscrofa11.1.100.gtf -o ${id}_stringtie.gtf -A ${id}_stringtie.tsv $id
+done
+python merge.py
+
+
+# Count quantification (genes)
+ls *bam | while read id;
+do
+featureCounts -T 16 -p -t exon -g gene_id -a /public/home/yiguoqiang/starGenome/Sus_scrofa.Sscrofa11.1.100.gtf -o ${id}.featureCounts.txt $id
+done
