@@ -22,5 +22,9 @@ with open(input_file_path, "r") as input_file:
             if "SV" in columns[0] and "SNP" in columns[1]:
                 # Write the first column (with "SV"), the second column (with "SNP"), and the third column to the output file
                 output_file.write(columns[0] + " " + columns[1] + " " + columns[2] + "\n")
+            if "SNP" in columns[0] and "SV" in columns[1]:
+                output_file.write(columns[1] + " " + columns[0] + " " + columns[2] + "\n")
+
+
 
 print("Output has been written to", output_file_path)
