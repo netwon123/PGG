@@ -1,9 +1,17 @@
+#snp/indel
+gatk --java-options "-Xms32G -Xmx192G -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantFiltration -O test.snp.fil.vcf.temp -V span_298_snp_rename.vcf.gz --filter-expression 'QUAL < 30.0 || QD < 2.0 || FS > 60.0 ||  SOR > 4.0' --filter-name lowQualFilter --cluster-window-size 10  --cluster-size 3 --missing-values-evaluate-as-failing
+gatk --java-options "-Xms32G -Xmx192G -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" SelectVariants -R ~/PGG_netwon/final_merge/backone_genome/backone.fa -V test.snp.fil.temp --exclude-filtered -O span_298_snp_rename.fQual.vcf
+vcftools --out jx_268_miss01_maf005_biallele --min-alleles 2 --max-alleles 2 --vcf jx_268.snp.filtered_fY.sort.vcf --recode --recode-INFO-all --max-missing 0.9 --maf 0.05
+
+
+#LD-pruning
 ~/software/plink --vcf jx_268_miss01_maf005_biallele.recode.vcf --recode12 --allow-extra-chr --out plink_cecum --set-missing-var-ids @:#
 ~/software/plink --allow-extra-chr --file plink_cecum --indep-pairwise 50 5 0.2 --recode  --out plink_cecum.LDpruned
 ~/software/plink --allow-extra-chr --file plink_cecum --recode vcf-iid --extract plink_cecum.LDpruned.prune.in --out plink_cecum.LDpruned
 
-
+#zip vcf
 bgzip -@ 8 plink_cecum.LDpruned.vcf
 tabix -f plink_cecum.LDpruned.vcf.gz
 
+#cacluated peer and pca
 Rscript prepare_data_for_tensorQTL.R jx268_count.tsv jx268_TPM.tsv tss.csv plink_cecum.LDpruned.vcf.gz cecum
