@@ -1,0 +1,17 @@
+setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/SV_ld/03_LD_breed/')
+
+
+read.table("multi.SNP_AS")->ESNP_AS;
+read.table("multi.SNP_EU")->ESNP_EU;
+read.table("multi.SV_AS")->ESV_AS;
+read.table("multi.SV_EU")->ESV_EU;
+ggplot() +
+  geom_line(data = ESNP_AS, aes(x = ESNP_AS[,1]/1000, y = ESNP_AS[,2]), color = "#8ecfc9", size = 1,linetype = "dashed") +
+  geom_line(data = ESNP_EU, aes(x =  ESNP_EU[,1]/1000, y = ESNP_EU[,2]), color = "#fa7f6f", size = 1, linetype = "dashed")+
+  geom_line(data = ESV_AS, aes(x =  ESV_AS[,1]/1000, y = ESV_AS[,2]), color = "#8ecfc9", size = 1)+
+  geom_line(data = ESV_EU, aes(x =  ESV_EU[,1]/1000, y = ESV_EU[,2]), color = "#fa7f6f", size = 1)+labs(
+    x = "Distance (Kb)",
+    y = expression("mean LD (r"^2*")"),
+  )+theme_classic()+scale_x_continuous(limits = c(0, 100))
+
+
