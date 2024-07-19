@@ -11,3 +11,22 @@ done
 STAR --runThreadN 16 --runMode genomeGenerate --genomeDir ./  --genomeFastaFiles ss11_masked_chr1-X.fa --sjdbGTFfile Sus_scrofa.Sscrofa11.1.100_chr1-X.gtf
 
 #mapping
+ls *_1_clean.fq.gz | while read i;
+do
+i=${i/_1_clean.fq.gz/}
+STAR --runThreadN 8 \
+--genomeDir /public/home/baoqi/SRWHS/jiangxi_tran/genome  \
+--sjdbGTFfile /public/home/baoqi/SRWHS/jiangxi_tran/genome/Sus_scrofa.Sscrofa11.1.100_chr1-X.gtf \
+--quantMode TranscriptomeSAM \
+--outSAMtype BAM SortedByCoordinate \
+--outSAMunmapped Within \
+--readFilesCommand zcat \
+--outFilterMismatchNmax 3 \
+--readFilesIn ${i}_1_clean.fq.gz ${i}_2_clean.fq.gz \
+--outFileNamePrefix ./${i}-STAR
+--outTmpDir ~/SRWHS/jiangxi_tran/clean/tmp/
+--limitBAMsortRAM 120000000000
+done
+
+ls *unique.bam | while read id; do gatk AddOrReplaceReadGroups -I $id -O ${id}_rg_added.bam -RGID 4 -RGLB lib1 -RGPL illumina -RGPU run -RGSM 20 -CREATE_INDEX true -VALIDATION_STRINGENCY SILENT -SORT_ORDER coordinate;done
+ls *added.bam | while  read id; do gatk MarkDuplicates -I $id -O ${id}.dedup.bam -CREATE_INDEX true -VALIDATION_STRINGENCY SILENT --READ_NAME_REGEX null -M dedupped_${id}-STARsorted.unique.marked_dup_metrics.txt;done
