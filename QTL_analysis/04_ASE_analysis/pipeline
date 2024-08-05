@@ -30,3 +30,18 @@ done
 
 ls *unique.bam | while read id; do gatk AddOrReplaceReadGroups -I $id -O ${id}_rg_added.bam -RGID 4 -RGLB lib1 -RGPL illumina -RGPU run -RGSM 20 -CREATE_INDEX true -VALIDATION_STRINGENCY SILENT -SORT_ORDER coordinate;done
 ls *added.bam | while  read id; do gatk MarkDuplicates -I $id -O ${id}.dedup.bam -CREATE_INDEX true -VALIDATION_STRINGENCY SILENT --READ_NAME_REGEX null -M dedupped_${id}-STARsorted.unique.marked_dup_metrics.txt;done
+
+#Haplotype phasing
+python /public/home/baoqi/SRWHS/jiangxi_tran/bam/bam268/phaser.py --bam ../SAMEA111507628-STARAligned.sortedByCoord.out.bam.unique.bam_rg_added.bam.dedup.bam   --sample SAMEA111507327               --o ph_SAMEA111507327  --vcf span298_snp.phasing.sort.vcf.gz --paired_end 1 --mapq 255 --baseq 10 --threads 8 --temp_dir tmp2 --gw_phase_vcf 1 --write_vcf 0  --output_read_ids 0
+
+# Produce gene level haplotype counts for allelic expression studies
+ls *txt | while read id;do python phaser_gene_ae.py --haplotypic_counts $id --features gene.sort.bed --o ${id}.genease.txt;done
+
+#merge
+python phaser_expr_matrix.py \
+            --gene_ae_dir dirfile \ # the path contains all sample's phaser.gene_ae.txt
+            --features gene.sort.bed \
+            --t 5 \
+            --o phaser_expr.298
+#cal aFC
+python phaser_cis_var.py --bed span298_ase.gw_phased.bed.gz --vcf span298_snp.phasing.sort.vcf.gz --pairs liver_cisqtl.txt --map sample.map.txt --o liver_aFC.txt --t 16
