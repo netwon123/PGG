@@ -1,0 +1,4 @@
+#expression don't be normalized (use TMM)
+python aFC.py --count_o 1 --log_xform 1 --log_base 2 --vcf jx_268_miss01_maf005_biallele.phased2.vcf.gz  \
+--pheno cecum.expr_tmm3.bed.gz --qtl cecum_cis.cis_qtl.txt.gz.txt --o aFC_cecum_log2afc_datalog2.txt \
+--cov covariate_cecum.txt --boot 100  --log_xform 0
