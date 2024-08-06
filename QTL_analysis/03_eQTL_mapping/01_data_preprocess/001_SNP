@@ -5,7 +5,7 @@ vcftools --out jx_268_miss01_maf005_biallele --min-alleles 2 --max-alleles 2 --v
 
 
 #LD-pruning
-~/software/plink --vcf jx_268_miss01_maf005_biallele.recode.vcf --recode12 --allow-extra-chr --out plink_cecum --set-missing-var-ids @:#
+~/software/plink --vcf jx_268_miss01_maf005_biallele.recode.vcf  --allow-extra-chr --out plink_cecum --set-missing-var-ids @:#
 ~/software/plink --allow-extra-chr --file plink_cecum --indep-pairwise 50 5 0.2 --recode  --out plink_cecum.LDpruned
 ~/software/plink --allow-extra-chr --file plink_cecum --recode vcf-iid --extract plink_cecum.LDpruned.prune.in --out plink_cecum.LDpruned
 
