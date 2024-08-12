@@ -15,3 +15,10 @@ tabix -f plink_cecum.LDpruned.vcf.gz
 
 #cacluated peer and pca
 Rscript prepare_data_for_tensorQTL.R jx268_count.tsv jx268_TPM.tsv tss.csv plink_cecum.LDpruned.vcf.gz cecum
+
+#get plink file
+plink --make-bed \
+  --out span_290 \
+  --set-missing-var-ids @:# \
+  --threads 16 \
+  --vcf span_290_miss01_maf005_biallele.recode.vcf
