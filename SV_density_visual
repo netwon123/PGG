@@ -40,6 +40,7 @@ python cal_threadsold.py
 awk '$4 > 19' as_density.bed > as_hotspots.bed
 awk '$4 > 5' eu_density.bed > eu_hotspots.bed
 
+bedtools merge -i as_hotspots.bed > as_hotspots2.bed
 
 #circos
 setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/')
