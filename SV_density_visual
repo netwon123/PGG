@@ -1,3 +1,47 @@
+
+
+
+ truvari bench -b pop_as2.vcf.recode.vcf.gz -c pop_eu2.vcf.recode.vcf.gz -r 1000 -p 0  -o comp
+
+
+ awk '{print $3}' tp-base.vcf > sharegene.txt
+# ~/software/plink --vcf pop_eu2.vcf.recode.vcf.gz --make-bed --out pop_eu2 --threads 8
+# ~/software/plink --vcf pop_as2.vcf.recode.vcf.gz --make-bed --out pop_as2 --threads 8
+
+# ~/software/plink --bfile pop_as2 --exclude comp/sharegene.txt --recode tab --out pop_as2_unique
+# ~/software/plink --bfile pop_eu2 --exclude comp/sharegene.txt --recode tab --out pop_eu2_unique
+
+using R-merge to get the unique gene id of eu/as
+bedtools makewindows -g genome_sizes.txt -w 100000 > windows.bed
+bedtools intersect -a windows.bed -b sv_positions.bed -c > sv_density.bed
+
+
+#get the threadsold
+```cal_threadsold.py```
+import pandas as pd
+import numpy as np
+
+# 输入文件
+input_file = 'as_density.bed'
+
+# 读取文件到 DataFrame
+df = pd.read_csv(input_file, delim_whitespace=True, header=None)
+
+# 提取第四列
+fourth_column = df[3]
+
+# 计算前 1% 的阈值
+threshold = np.percentile(fourth_column, 99)
+
+# 打印结果
+print(f"前 5% 的阈值是: {threshold}")
+
+python cal_threadsold.py
+awk '$4 > 19' as_density.bed > as_hotspots.bed
+awk '$4 > 5' eu_density.bed > eu_hotspots.bed
+
+
+#circos
 setwd('G:/博士/泛基因组组/PGG-project/analysis/SV stats/')
 df<-read.table("INS_density.snpde2n",sep="\t",header=T)
 ins<-read.table("INS_density.snpden2",sep="\t",header=T)
