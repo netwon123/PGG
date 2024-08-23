@@ -1,12 +1,8 @@
-vcftools \
---minDP 2 \
---out pca_meanDP2_miss08_maf005.vcf \
---vcf ../pop_filted2.vcf \
---recode --recode-INFO-all \
---max-missing 0.8 \
---maf 0.05
+#sv don't need pruning
+plink2  --autosome --maf 0.01 --make-bed  \
+--max-alleles 2  --out ont203_sv_maf001_bialle \
+--threads 16 --vcf pop_final.vcf
 
-vcftools --maf 0.05 --max-missing 0.3 --recode --recode-INFO-all --vcf pop_final_id_rn_100k_bnd.sort.vcf --out pop_miss03_maf005
 
 #pca
 ~/software/plink --vcf ../pop_filted2.vcf --recode --out testacc_qc --const-fid --allow-extra-chr --threads 20
