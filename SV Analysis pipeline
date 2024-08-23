@@ -1,5 +1,5 @@
 #sv don't need pruning
-plink2  --autosome --maf 0.01 --make-bed  \
+plink2 --maf 0.01 --make-bed  \
 --max-alleles 2  --out ont203_sv_maf001_bialle \
 --threads 16 --vcf pop_final.vcf
 
