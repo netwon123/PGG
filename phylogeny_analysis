@@ -9,6 +9,8 @@ plink2 --vcf ../ont203.snp_q20_dp2.recode.vcf --geno 0.1 --maf 0.05 --indep-pair
 #sv
 plink2 --vcf ../pop_final.vcf --maf 0.01 --make-bed --out ont203_sv  --max-alleles 2
 
+#distance matirx
+~/software/plink --bfile ont203.snp_QC --out Distance_snp.out --recode --distance-matrix
 
 #tree constructed by phylip-3.697
 awk '{print $2"           "}' 58inds_maf005_geno01_phased.mdist.id | cut -c1-10 > 58inds_maf005_geno01_phased_phylip.id 
