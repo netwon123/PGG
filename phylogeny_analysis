@@ -7,7 +7,7 @@ plink2 --vcf ../ont203.snp_q20_dp2.recode.vcf --geno 0.1 --maf 0.05 --indep-pair
 ~/software/plink --allow-extra-chr --vcf ont203.LDpruned.vcf --make-bed --out ont203_LDpruned
 
 #sv
-plink2 --vcf ../pop_final.vcf --geno 0.3--maf 0.05 --make-bed --out ont203_sv  --max-alleles 2
+plink2 --vcf ../pop_final.vcf --maf 0.01 --make-bed --out ont203_sv  --max-alleles 2
 
 
 #tree constructed by phylip-3.697
