@@ -1,3 +1,15 @@
+#mapping and genotype SV
+/public/software/singularity/bin/singularity exec --nv --network=none -n ~/vg_v1.51.0.sif vg giraffe -t 16 -Z /public/home/baoqi/PGG_netwon/final_merge/PGG.giraffe.gbz -m /public/home/baoqi/PGG_netwon/final_merge/PGG.min -d /public/home/baoqi/PGG_netwon/final_merge/PGG.dist  -f 88_1_clean.fq.gz -f 88_2_clean.fq.gz > 88_vg-pan.gam
+/public/software/singularity/bin/singularity exec --nv --network=none -n ~/vg_v1.51.0.sif vg pack -t 16 -x /public/home/baoqi/PGG_netwon/final_merge/PGG.giraffe.gbz -g 88_vg-pan.gam -o 88_vg-pan.pack
+/public/software/singularity/bin/singularity exec --nv --network=none -n ~/vg_v1.51.0.sif vg call -t 16 -r /public/home/baoqi/PGG_netwon/final_merge/PGG.snarls -z  /public/home/baoqi/PGG_netwon/final_merge/PGG.giraffe.gbz -a -k 88_vg-pan.pack -s 88 >88_vg-pan.vcf
+
+#split the mutil-allele
+ls *gz | while read id;
+do
+bcftools norm --threads 16 -m -both $id -Oz -o ${id}.split.vcf.gz
+done
+
+#extract and annotate the sv
 ls *split.vcf |while read id;do python extract_sv_len50.py $id > ${id}.indel50.vcf;done
 ls *indel50.vcf | while read id; do bcftools view --exclude 'GT="0/0" || GT="0" || GT="."' $id | bcftools norm -f ~/assembly_pacbio/backone.fa | bcftools sort > ${id}.noref.vcf;done
 ls *noref.vcf | while read id;do bgzip -@ 8 $id;done
@@ -6,5 +18,6 @@ ls *gz > sample.txt
 bcftools merge -m none --threads 8 -l sample.txt --missing-to-ref -Oz -o panel_273jx_sv.vcf_new.gz
 tabix -f panel_273jx_sv.vcf_new.gz
 
+#Mergeing sv using Panpop
 perl ~/software/panpop-main/bin/PART_run.pl --in_vcf 298merge_span_sv.vcf.gz -o OUTDIR_RUN1 -r ~/PGG_netwon/final_merge/backone_genome/backone.fa  -t 56 --tmpdir TMPDIR
 perl ~/software/panpop-main/bin/PART_run.pl --in_vcf OUTDIR_RUN1/3.final.vcf.gz -o OUTDIR_RUN2 -r ~/PGG_netwon/final_merge/backone_genome/backone.fa  -t 56 --tmpdir TMPDIR -not_first_merge
