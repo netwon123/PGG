@@ -61,3 +61,13 @@ chr_X.vg  \
 #indexes used by the rna mapper 
 ~/vg autoindex --workflow mpmap -t 4 --prefix vg_rna --ref-fasta ../00_backone_genome/backone.fa --vcf allvariant2.vcf.gz --tx-gff ../00_backone_genome/Sus_scrofa.Sscrofa11.1.100.gtf
 
+#https://github.com/vgteam/vg/wiki/Multipath-alignments-and-vg-mpmap
+ls ./*fq.gz | while read i;
+do
+i=${i/_1_clean.fq.gz/}
+~/vg mpmap -x ~/PGG_netwon/04_result/01_vg_file/vg_rna.spliced.xg \
+-g ~/PGG_netwon/04_result/01_vg_file/vg_rna.spliced.gcsa \
+-d ~/PGG_netwon/04_result/01_vg_file/vg_rna.spliced.dist \
+-n rna -t 16 \
+-f ${i}_1_clean.fq.gz -f ${i}_2_clean.fq.gz > ${i}.gamp;
+done
