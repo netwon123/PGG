@@ -1,3 +1,24 @@
+#alignment
+bwa mem -t 16 -R '@RG\tID:id01\tPL:UNKNOWN\tSM:AW_15x'  /public/home/baoqi/PGG_netwon/final_merge/backone_genome/backone.fa ../88_1_clean.fq.gz_15x.fq.gz ../88_2_clean.fq.gz_15x.fq.gz | samtools view -@ 16 -bS | samtools sort -@ 16 -o 88_clean_15x.bam
+
+ls *bam | while read id;
+do
+gatk --java-options "-Xms32G -Xmx120G -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" MarkDuplicates -I $id -O ${id}_rmM.bam --REMOVE_SEQUENCING_DUPLICATES true -M ${id}.log
+done
+
+ls *_rmM.bam | while read id;
+do
+samtools index -@ 8 ${id}
+done
+
+#call snp
+ls *_rmM.bam | while read id;
+do
+gatk --java-options "-Xms32G -Xmx120G -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" HaplotypeCaller -R ~/PGG_netwon/final_merge/backone_genome/backone.fa -I $id -O ${id}.vcf.gz
+done
+
+
+
 #delly
 delly call -n  -g ~/PGG_netwon/final_merge/backone_genome/backone.fa $id -o ${id}.delly.bcf
 
