@@ -1,3 +1,13 @@
+#get the different depht
+#88_1_clean.fq.gz have 50x
+~/software/seqtk-1.4/seqtk sample -s100 88_1_clean.fq.gz -f 0.1  > 88_1_clean.fq.gz_5x.fq
+~/software/seqtk-1.4/seqtk sample -s100 88_1_clean.fq.gz -f 0.2  > 88_1_clean.fq.gz_10x.fq
+~/software/seqtk-1.4/seqtk sample -s100 88_1_clean.fq.gz -f 0.4  > 88_1_clean.fq.gz_20x.fq
+~/software/seqtk-1.4/seqtk sample -s100 88_1_clean.fq.gz -f 0.6  > 88_1_clean.fq.gz_30x.fq
+~/software/seqtk-1.4/seqtk sample -s100 88_1_clean.fq.gz -f 0.8  > 88_1_clean.fq.gz_40x.fq
+
+
+
 #alignment
 bwa mem -t 16 -R '@RG\tID:id01\tPL:UNKNOWN\tSM:AW_15x'  /public/home/baoqi/PGG_netwon/final_merge/backone_genome/backone.fa ../88_1_clean.fq.gz_15x.fq.gz ../88_2_clean.fq.gz_15x.fq.gz | samtools view -@ 16 -bS | samtools sort -@ 16 -o 88_clean_15x.bam
 
