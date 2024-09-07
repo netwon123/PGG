@@ -27,6 +27,11 @@ do
 gatk --java-options "-Xms32G -Xmx120G -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" HaplotypeCaller -R ~/PGG_netwon/final_merge/backone_genome/backone.fa -I $id -O ${id}.vcf.gz
 done
 
+ls *gz | while read id;
+do
+bcftools norm --threads 16 -m -both $id -Oz -o ${id}.split.vcf.gz
+tabix -f ${id}.split.vcf.gz
+done
 
 
 #delly
