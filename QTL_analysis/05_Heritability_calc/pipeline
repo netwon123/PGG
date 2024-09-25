@@ -16,4 +16,4 @@ plink2 --vcf ../../../data_298span/span_298.snp.filtered_fY.sort.vcf.gz --maf 0.
 ~/software/ldak --bfile ../snp-indel-sv --calc-weights-all snp-indel-svs --max-threads 16
 ~/software/ldak --bfile ../../../01_genotype/span/span_298.sv --calc-kins-direct sv.ldak.weight --weight sv/weights.all --kinship-gz YES --power -.5 --max-threads 16 --allow-multi YES
 ~/software/ldak --pheno ../phe_grn_muscle_snp-sv.txt --mpheno ALL --reml all --grm LDAK-Thin --covar ../Muscle.covariates.txt  --max-threads 16
-
+ ~/software/ldak --pheno phe_ldak500.txt --mpheno ALL --reml all --mgrm ab.list --covar Cov_span_liver_nob.txt  --max-threads 16
