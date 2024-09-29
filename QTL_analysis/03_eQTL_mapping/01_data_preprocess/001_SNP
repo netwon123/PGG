@@ -9,6 +9,11 @@ vcftools --out jx_268_miss01_maf005_biallele --min-alleles 2 --max-alleles 2 --v
 ~/software/plink --allow-extra-chr --file plink_cecum --indep-pairwise 50 5 0.2 --recode  --out plink_cecum.LDpruned
 ~/software/plink --allow-extra-chr --file plink_cecum --recode vcf-iid --extract plink_cecum.LDpruned.prune.in --out plink_cecum.LDpruned
 
+#select the pc and convert factor to Digital covariate
+~/software/plink --allow-extra-chr --vcf plink_span.LDpruned.vcf --pca 50 --out span_pca --threads 16
+/bin/twstats -t twtable -i yourfile_pca.eigenval -o yourfile_pca_number
+~/software/plink --bfile ../../01_genotype/jx/jx272_snp_maf005_geno01 --covar cov_jx_factor.txt --write-covar --dummy-coding
+
 #zip vcf
 bgzip -@ 8 plink_cecum.LDpruned.vcf
 tabix -f plink_cecum.LDpruned.vcf.gz
