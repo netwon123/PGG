@@ -13,17 +13,20 @@ def main(vcf_file):
                 fields = line.strip().split('\t')
                 ref = fields[3]
                 alt = fields[4]
-                
-                # Check if it's a SNP
+
+                # Skip SNP (ref and alt of length 1)
                 if len(ref) == 1 and len(alt) == 1:
-                    print(line.strip())
+                    continue
                 else:
                     # Calculate the length of the indel
                     indel_length = abs(len(ref) - len(alt))
 
-                    # Check if it's an indel and its length is less than 50 bp
-                    if len(ref) != len(alt) and indel_length < 50:
-                        print(line.strip())
+                    # Skip indels that are either less than 50 bp or greater than 100,000 bp
+                    if indel_length < 50 or indel_length > 100000:
+                        continue
+
+                    # Print the indels with length between 50 and 100,000 bp
+                    print(line.strip())
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
