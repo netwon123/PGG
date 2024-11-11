@@ -1,15 +1,11 @@
-#permutation cis-eQTL mapping
-python ~/software/tensorqtl-1.0.9/tensorqtl/tensorqtl.py span_296 Muscle.expr_tmm_inv2.bed.4.bed.gz muscle_cis \
---covariates covariate_muscle.txt --mode cis --seed 985
+#joint variant eQTL mapping
+#Standard cis-QTL mapping
+OmiGA --mode cis --genotype ../01_raw_gt_maf005_geno01_biallele/02_rmMiss/joint.filled \
+--phenotype tLiver.expr_tmm_qt.bed.gz  --prefix joint  --covariates Cov_liver.txt \
+--output-dir 01_cis_eqtl --threads 36
 
-#nominal cis-eQTL mapping
-python ~/software/tensorqtl-1.0.9/tensorqtl/tensorqtl.py span_296 Muscle.expr_tmm_inv2.bed.4.bed.gz muscle_cis_nominal \
---covariates covariate_muscle.txt --mode cis_nominal
-
-#Conditionally independent cis-eQTL mapping
-python ~/software/tensorqtl-1.0.9/tensorqtl/tensorqtl.py span_296 Muscle.expr_tmm_inv2.bed.4.bed.gz muscle_cis_independent \
---covariates covariate_muscle.txt --mode cis_independent  --cis_output muscle_cis.cis_qtl.txt.gz
-
-#trans-QTL mapping
-python ~/software/tensorqtl-1.0.9/tensorqtl/tensorqtl.py span_296 Muscle.expr_tmm_inv2.bed.4.bed.gz muscle_trans \
---covariates covariate_muscle.txt --mode trans
+#Conditional independent cis-QTL mapping
+OmiGA --mode cis_independent  --genotype ../01_raw_gt_maf005_geno01_biallele/02_rmMiss/joint.filled \
+--phenotype tLiver.expr_tmm_qt.bed.gz  --prefix joint  --covariates Cov_liver.txt \
+--cis-file 01_cis_eqtl/joint.cis_qtl.txt.gz --threads 36 --qtl-map-model a+A  \
+--output-dir 02_condition_independ_cis_eqtl
