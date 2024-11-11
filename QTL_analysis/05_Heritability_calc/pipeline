@@ -5,15 +5,9 @@ plink2 --vcf ../../../data_298span/span_298.snp.filtered_fY.sort.vcf.gz --maf 0.
 #merge
 ~/software/plink --bfile snp_maf005 --bmerge indel_maf005.bed indel_maf005.bim indel_maf005.fam --make-bed --out snp-indel
 
- ~/software/plink --bfile snp-indel --bmerge sv_maf001.bed sv_maf001.bim sv_maf001.fam --make-bed --out snp-indel-sv^C
+#GRM consrtuction
+perl -e 'print "ID\n"; while(<>){@c=split /\s+/; print "$c[1]\n";}' < sv/qc.filled.bim > sv/qc.filled.sv_list.csv
+mph --make_grm --binary_genotype ./snp-indel/qc2 --snp_info ./snp-indel/qc.snp_list.csv --num_threads 14 --out grms/snp
 
-#
- ~/software/plink --bfile ../GT_liver/sv_maf001 --remove rm.txt --recode tab --out sv_maf001_290 --make-bed --threads 16
-
-#ldak
-
-~/software/ldak --bfile ../snp-indel-sv --cut-weights snp-indel-svs --window-prune 0.98 --max-threads 16
-~/software/ldak --bfile ../snp-indel-sv --calc-weights-all snp-indel-svs --max-threads 16
-~/software/ldak --bfile ../../../01_genotype/span/span_298.sv --calc-kins-direct sv.ldak.weight --weight sv/weights.all --kinship-gz YES --power -.5 --max-threads 16 --allow-multi YES
-~/software/ldak --pheno ../phe_grn_muscle_snp-sv.txt --mpheno ALL --reml all --grm LDAK-Thin --covar ../Muscle.covariates.txt  --max-threads 16
- ~/software/ldak --pheno phe_ldak500.txt --mpheno ALL --reml all --mgrm ab.list --covar Cov_span_liver_nob.txt  --max-threads 16
+#QQ-plot and hit-plot
+Rscript QQplot.R
