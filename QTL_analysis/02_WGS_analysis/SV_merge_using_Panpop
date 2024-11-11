@@ -20,3 +20,7 @@ bcftools merge -m none --threads 16 -l sample.txt  -Oz -o panel.gz
 #Mergeing sv using Panpop
 perl ~/software/panpop-main/bin/PART_run.pl --in_vcf 298merge_span_sv.vcf.gz -o OUTDIR_RUN1 -r ~/PGG_netwon/final_merge/backone_genome/backone.fa  -t 56 --tmpdir TMPDIR
 perl ~/software/panpop-main/bin/PART_run.pl --in_vcf OUTDIR_RUN1/3.final.vcf.gz -o OUTDIR_RUN2 -r ~/PGG_netwon/final_merge/backone_genome/backone.fa  -t 56 --tmpdir TMPDIR -not_first_merge
+
+#soft-filter
+python cal_av_dp.py #get the average depth
+bcftools filter -i 'INFO/DP < avDP/3 & avDP*3 > INFO/DP' input.vcf.gz -o filtered.vcf
