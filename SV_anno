@@ -6,6 +6,7 @@ tabix -p gff data.gff.gz
 
 
 #---get the region or breakpoint
+ cat scd.txt.vcf.noref.vcf | python sniffles2_vcf_parser.py parsesv -s 0 > scd.txt.vcf.noref.bed
 awk '{
     if ($4 == "INS") {
         print $1, $2, $2, $4
