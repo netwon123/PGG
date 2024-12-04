@@ -16,4 +16,4 @@ awk '{
 }' scd.txt.vcf.noref.bed.nobnd.bed > scd.txt.vcf.noref.bed.nobnd2.bed
 
 
-intervene venn -i 04_pop_specisic_sv/ --bedtools-options -f 0.3 -F 0.3 --save-overlaps -o 04_pop_specisic_sv/
+intervene venn -i 04_pop_specisic_sv/*bed --bedtools-options f=0.3,F=0.3,e --save-overlaps -o 04_pop_specisic_sv/
