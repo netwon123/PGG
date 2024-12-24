@@ -24,3 +24,34 @@ perl ~/software/panpop-main/bin/PART_run.pl --in_vcf OUTDIR_RUN1/3.final.vcf.gz 
 #soft-filter
 python cal_av_dp.py #get the average depth
 bcftools filter -i 'INFO/DP < avDP/3 & avDP*3 > INFO/DP' input.vcf.gz -o filtered.vcf
+
+#remove dupulacted sample (n=60)
+vcftools --gzvcf 3.final.vcf.gz --recode --recode-INFO-all --stdout  --remove  dupsample.txt   > 3.final_3139.vcf.gz
+
+#rename vcf
+bcftools reheader -s tihuan2.txt 3.final_3139.vcf.gz -Oz -o 3.final_3139.rname.vcf.gz
+
+
+#remove multiallelic site
+vcftools --out 3.final_3139.biallel --min-alleles 2 --max-alleles 2 --gzvcf 3.final_3139.rname.vcf.gz --recode --recode-INFO-all
+
+#remove divergent type
+python 01_extract_sv_len50.py 3.final_3139.biallel.vcf > 3.final_3139.biallel.indel.vcf
+
+
+#add info/AC
+
+bcftools +fill-tags 3.final_3139.biallel.indel.vcf -o 3.final_3139.biallel.indel.ac.vcf -- -t AC
+
+#extract 2337 samples and remove site with AC=0,1,2
+bcftools view  -S sample_2337.list -e "AC==0 | AC==1 | AC==2"  3.final_3139.biallel.indel.ac.vcf  -o 3.final_3139.biallel.indel.filtedAC.vcf
+
+#filted missing rate > 0.8
+vcftools --max-missing 0.8 --recode-INFO-all --vcf 3.final_2337.biallel.indel.filtedAC.vcf  --out 3.final_2337.biallel.indel.filtedAC_fmiss08 --recode
+
+#add SVTYPE
+awk 'BEGIN {OFS="\t"} {if (length($4) > length($5)) $8=$8";SVTYPE=DEL"; else if (length($4) < length($5)) $8=$8";SVTYPE=INS"; print $0}' \
+    bq_2337.genome.sv.filtered.recode.vcf > bq_2337.genome.sv.DEL_INS.vcf
+
+#add SVLEN
+awk 'BEGIN {OFS="\t"} {if (length($4) > length($5)) $8=$8";SVLEN="length($4); else if (length($4) < length($5)) $8=$8";SVLEN="length($5); print $0}'  2337.genome.sv.DEL_INS.vcf > 2337.genome.sv.DEL_INS.addlen.vcf
