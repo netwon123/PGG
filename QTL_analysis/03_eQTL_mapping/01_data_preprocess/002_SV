@@ -1,14 +1,23 @@
-
-vcftools --out sv.maf001.vcf  --min-alleles 2 --max-alleles 2 --vcf ../pop_filted2.vcf --recode --recode-INFO-all ---maf 0.01
-
-Rscript prepare_data_for_tensorQTL.R span298.count_Muscle.tsv span298.TPM_Muscle.tsv tss.csv span_296_muscle_maf001.recode.vcf.gz Muscle
-
+#filted sv using the same condition of panel
+vcftools --out sv.maf001.vcf  --min-alleles 2 --max-alleles 2 --vcf ../pop_filted2.vcf --recode --recode-INFO-all 
 
 plink2  --autosome \
   --maf 0.01 \
   --make-bed \
-  --max-alleles 2 \
   --out jx_268_cecum \
   --set-missing-var-ids SV-@:# \
   --threads 16 \
   --vcf PART_268merge_jx_sv_fY_rn.sort.indel.vcf \
+
+Rscript prepare_data_for_tensorQTL.R span298.count_Muscle.tsv span298.TPM_Muscle.tsv tss.csv span_296_muscle_maf001.recode.vcf.gz Muscle
+
+#remove dupulated site with small variants
+plink --bfile sv_rmMiss --exclude rmDup.txt --out sv_rmMiss_rmDup --make-bed
+
+#merged small variants
+plink \
+  --bfile SNP-INDEL_rmMiss
+  --bmerge sv_rmMiss_rmDup
+  --make-bed
+  --out joint
+  --threads 16
