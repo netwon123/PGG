@@ -3,28 +3,13 @@ gatk --java-options "-Xms32G -Xmx192G -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" 
 gatk --java-options "-Xms32G -Xmx192G -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" SelectVariants -R ~/PGG_netwon/final_merge/backone_genome/backone.fa -V test.snp.fil.temp --exclude-filtered -O span_298_snp_rename.fQual.vcf
 vcftools --out jx_268_miss01_maf005_biallele --min-alleles 2 --max-alleles 2 --vcf jx_268.snp.filtered_fY.sort.vcf --recode --recode-INFO-all --max-missing 0.9 --maf 0.05
 
+#remove *
 
-#LD-pruning
-~/software/plink --vcf jx_268_miss01_maf005_biallele.recode.vcf  --allow-extra-chr --out plink_cecum --set-missing-var-ids @:#
-~/software/plink --allow-extra-chr --file plink_cecum --indep-pairwise 50 5 0.2 --recode  --out plink_cecum.LDpruned
-~/software/plink --allow-extra-chr --file plink_cecum --recode vcf-iid --extract plink_cecum.LDpruned.prune.in --out plink_cecum.LDpruned
+#LD-pruning using SNP-INDEL sites
+~/software/plink --allow-extra-chr --bfile SNP-INDEL_rmMiss --indep-pairwise 50 5 0.2 --recode  --out SNP-INDEL_rmMiss.LDpruned
+~/software/plink --allow-extra-chr --file plink_cecum --recode vcf-iid --extract SNP-INDEL_rmMiss.LDpruned.prune.in --out SNP-INDEL_rmMiss.LDpruned
 
 #select the pc and convert factor to Digital covariate
 wget https://data.broadinstitute.org/alkesgroup/EIGENSOFT/EIG-6.1.4.tar.gz
-~/software/plink --allow-extra-chr --vcf plink_span.LDpruned.vcf --pca 50 --out span_pca --threads 16
+~/software/plink --allow-extra-chr --vcf SNP-INDEL_rmMiss.LDpruned.vcf --pca 50 --out span_pca --threads 16
 /bin/twstats -t twtable -i yourfile_pca.eigenval -o yourfile_pca_number
-~/software/plink --bfile ../../01_genotype/jx/jx272_snp_maf005_geno01 --covar cov_jx_factor.txt --write-covar --dummy-coding
-
-#zip vcf
-bgzip -@ 8 plink_cecum.LDpruned.vcf
-tabix -f plink_cecum.LDpruned.vcf.gz
-
-#cacluated peer and pca
-Rscript prepare_data_for_tensorQTL.R jx268_count.tsv jx268_TPM.tsv tss.csv plink_cecum.LDpruned.vcf.gz cecum
-
-#get plink file
-plink --make-bed \
-  --out span_290 \
-  --set-missing-var-ids @:# \
-  --threads 16 \
-  --vcf span_290_miss01_maf005_biallele.recode.vcf
