@@ -1,0 +1,13 @@
+#imputed 
+library(bigsnpr)
+bedfile <- "qc.bed"
+filledbed <- "qc.filled.bed"
+rds <- snp_readBed(bedfile, backingfile = tempfile())
+bigsnp <- snp_attach(rds)
+filled <- snp_fastImputeSimple(bigsnp$genotypes, method = "random")
+bigsnp$genotypes <- filled
+snp_writeBed(bigsnp, filledbed)
+
+#constructed GRM 
+perl -e 'print "ID\n"; while(<>){@c=split /\s+/; print "$c[1]\n";}' < sv/qc.filled.bim > sv/qc.filled.sv_list.csv
+mph --make_grm --binary_genotype ./snp-indel/qc2 --snp_info ./snp-indel/qc.snp_list.csv --num_threads 14 --out grms/snp
