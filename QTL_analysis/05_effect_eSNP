@@ -1,0 +1,2 @@
+python aFC.py --vcf SNP.vcf.gz --pheno tLiver.expr_tmm_qt.bed.gz \
+--qtl eSNP_liver.txt --o testliver_qt.txt --cov Cov_liver.txt --boot 100  --log_xform 0
