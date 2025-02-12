@@ -1,0 +1,2 @@
+#bedfile should be sorted 
+python cal_fold_change2.py muscle_esv.recode.vcf.bed.pos.bed atac_all_tissue/
