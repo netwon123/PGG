@@ -1,0 +1,22 @@
+#maf hava no direction, and you don't know  the specific allele
+
+if you just show the frequency and the num of site or other information, you can use the maf.
+plink --vcf $vcf --freq --out ${vcf}_freq
+
+the format of output as follow:
+```
+CHR                    SNP   A1   A2          MAF  NCHROBS
+   1      Sniffles2.INV.4M0 <INV>    N          0.5      108
+   1      Sniffles2.INS.5M0 <INS>    N       0.1574      108
+   1      Sniffles2.INS.6M0 <INS>    N      0.02778      108
+```
+#==============================================================================================
+if you want to get the frequency of specific allele, you should know the frequency of ref/alt.
+
+vcftools --vcf $vcf --freq --out ${vcf}_freq
+
+python combine_AF_alt_matrix.py
+
+
+
+
