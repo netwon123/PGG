@@ -13,7 +13,8 @@ CHR                    SNP   A1   A2          MAF  NCHROBS
 #==============================================================================================
 if you want to get the frequency of specific allele, you should know the frequency of ref/alt.
 
-bcftools view  -S sub.txt -e "AC==0"  sub.vcf.fz -Oz  -o sub.noref.vcf.gz
+bcftools view  -S sub.txt   all.vcf.fz -Oz  -o sub.vcf.gz
+bcftools view -e "AC==0"  sub.vcf.gz -Oz  -o sub.noref.vcf.gz
 vcftools --vcf $vcf --freq --out ${vcf}_freq
 
 #python combine_AF_alt_matrix.py
