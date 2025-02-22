@@ -3,6 +3,7 @@ http://hgdownload.cse.ucsc.edu/goldenpath/hg38/phastCons100way/hg38.100way.phast
 
 #using wig2bed of bedops
 ls *wigFix | while read id;do wig2bed --max-mem 64G <$id> ${id}.bed
+bash split_chunk.sh
 
 #https://hgdownload.soe.ucsc.edu/goldenPath/hg38/liftOver/
-ls *bed | while read id; do ./liftOver $id  hg38ToSusScr11.over.chain.gz ${id}.ss11.bed unmapp.txt
+ls *bed | while read id; do liftOver -minMactch=0.8 $id  ../hg38ToSusScr11.over.chain.gz ${id}.ss11.bed ${id}.unmap.txt;done
