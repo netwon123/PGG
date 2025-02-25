@@ -6,4 +6,5 @@ ls *wigFix | while read id;do wig2bed --max-mem 64G <$id> ${id}.bed
 bash split_chunk.sh
 
 #https://hgdownload.soe.ucsc.edu/goldenPath/hg38/liftOver/
-ls *bed | while read id; do liftOver -minMactch=0.8 $id  ../hg38ToSusScr11.over.chain.gz ${id}.ss11.bed ${id}.unmap.txt;done
+ls *bed.gz | xargs -I {} -P 56 sh -c 'liftOver -minMatch=0.8 {} ../../hg38ToSusScr11.over.chain.gz output_liftOver_chunks/{}.ss11.bed output_liftOver_chunks/{}.unmap.txt'
+
