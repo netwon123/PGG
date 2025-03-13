@@ -18,7 +18,7 @@ bcftools merge -m none --threads 16 -l sample.txt  -Oz -o panel.gz
 
 #soft-filter
 python cal_av_dp.py #get the average depth
-bcftools filter -i 'INFO/DP < avDP/3 & avDP*3 > INFO/DP' input.vcf.gz -o filtered.vcf
+bcftools filter -i 'INFO/DP > avDP/3 & avDP*3 > INFO/DP' input.vcf.gz -o filtered.vcf
 
 
 #Mergeing sv using Panpop
