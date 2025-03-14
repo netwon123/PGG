@@ -1,7 +1,7 @@
 #maf hava no direction, and you don't know  the specific allele
 
 if you just show the frequency and the num of site or other information, you can use the maf.
-plink --vcf $vcf --freq --out ${vcf}_freq
+plink2 --vcf $vcf --freq --out ${vcf}_freq #plink1.9 should --keep-ref-order
 
 the format of output as follow:
 ```
