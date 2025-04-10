@@ -67,3 +67,9 @@ done
 python /public/home/baoqi/software/manta-1.6.0.centos6_x86_64/bin/configManta.py --bam 01_10x.bam_rmM.bam \
 --referenceFasta ~/PGG_netwon/final_merge/backone_genome/backone.fa --runDir manta_01_10x
 python manta_01_10x/runWorkflow.py  -m local -j 8
+
+#compared two vcf 
+ls *indel50.vcf | while read id; do bcftools view --exclude 'GT="0/0" || GT="0" || GT="."' $id | bcftools norm -f ~/PGG_netwon/final_merge/backone_genome/backone.fa | bcftools sort > ${id}.noref.vcf;done
+ls *noref.vcf | while read id;do bgzip -@ 8 $id;done
+ls *gz | while read id; do tabix -f $id;done
+ls *.noref.vcf.gz | while read id; do truvari bench -b /public/home/baoqi/SVanalysis/eval/truth_set/PTR_merge_5tools.vcf.filted.vcf.indel.vcf.2.vcf.sort.vcf.gz -c $id -f ~/PGG_netwon/final_merge/backone_genome/backone.fa  --dup-to-ins -p 0 --passonly -s 50 -r 1000 -o ${id}_new;done
