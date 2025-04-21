@@ -1,0 +1,39 @@
+#get the cis-variants of each gene
+awk '{print > $4".bed"}' ../genes_flank1MB.bed
+ls *bed | while read id;do bcftools view -R $id joint.vcf.gz \ #(joint2.vcf.gz) 
+-o ${id}.eachgene.vcf;done
+ls *vcf | while read id ;do awk '{print $3}' $id > ${id}.id;done
+
+#constructed the GRM
+mkdir 01_grm
+ls *.id | xargs -I {} -P 56 sh -c 'mph --make_grm \
+--binary_genotype ~/SVanalysis/04_RNA-SEQ/qtTMM/06_eqtl/02_genotype/joint \
+--snp_info {} --num_threads 14 --out 01_grm/{}'
+
+#get the list
+cd 01_grm
+ls ./*.grm.iid | xargs -I {} -P 56 sh -c '
+    id=$(basename "{}" .grm.iid)
+    echo "./01_grm/$id" > "${id}.list"
+'
+
+#calculated the h2
+mkdir 04_result_l
+ls *list | xargs -I {} -P 52 sh -c '
+    file="{}"
+    id=$(basename "$file" .bed.eachgene.vcf.id.list)  # 使用 basename 正确去掉后缀
+    mph --reml \
+        --grm_list "$file" \
+        --phenotype /public/home/baoqi/SVanalysis/04_RNA-SEQ/qtTMM/01_mph_phenotype/Liver.mph.csv \
+        --covariate_file /public/home/baoqi/SVanalysis/04_RNA-SEQ/qtTMM/02_covariant/Cov_liver.csv \
+        --covariate_names all \
+        --trait "$id" \
+        --num_threads 1 \
+        --num_random 500 \
+        --out "04_result_l/${id}.snp_indel_sv"
+'
+
+#extract the pve and logLL
+Rscript extract_info_fromMPH.R
+
+
