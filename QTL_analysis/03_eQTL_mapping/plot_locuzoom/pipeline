@@ -4,4 +4,4 @@ Rscript step3_plot_eqtl_ld_gene.R
 
 
 #get the annotation tp plot gene structure
-python gene_features_plot.tsv
+python get_gene_annotation.py
