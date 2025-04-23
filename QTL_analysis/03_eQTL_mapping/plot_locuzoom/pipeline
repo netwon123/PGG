@@ -1,7 +1,6 @@
  Rscript step1_get_region_info.R ENSSSCG00000000151 all_sig_pair_duodenum.3model_filtedbeta.txt.gz.db.gz gene_annotation.txt
 bash step2_extract_vcf_ld.sh ENSSSCG00000000151.region_info.txt
 Rscript step3_plot_eqtl_ld_gene.R
- vcftools --vcf joint.vcf --snps snp.id --recode --out sig.snp
 
 #get the annotation tp plot gene structure
 python get_gene_annotation.py
