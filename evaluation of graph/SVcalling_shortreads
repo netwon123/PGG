@@ -31,7 +31,7 @@ done
 
 
 #delly
-ls *gz | while read id;
+ls *bam | while read id;
 do
 delly call -n  -g ~/PGG_netwon/04_result/00_backone_genome/backone.fa $id -o ${id}.delly.bcf
 done
