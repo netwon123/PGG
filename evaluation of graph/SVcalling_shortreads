@@ -59,6 +59,11 @@ ls *splitters.unsorted.bam | while read id;
 do
 samtools sort -@ 4  $id -o ${id}.sample.splitters.sort.bam
 done
+ls *.sort.bam_rmM.bam | while read i;
+do
+i=${i/.sort.bam_rmM.bam/}
+lumpyexpress -B ${i}.sort.bam_rmM.bam -S ${i}.sort.bam_rmM.bam.splitters.unsorted.bam.sample.splitters.sort.bam -D ${i}.sort.bam_rmM.bam.discordants.unsorted.bam.discordants.sort.bam -R ~/PGG_netwon/04_result/00_backone_genome/backone.fa -o ${i}.lumpy.vcf
+done
 
 
 #manta
