@@ -35,6 +35,7 @@ ls *bam | while read id;
 do
 delly call -n  -g ~/PGG_netwon/04_result/00_backone_genome/backone.fa $id -o ${id}.delly.bcf
 done
+ls *bcf | while read id;do bcftools view $id > ${id}.vcf;done
 
 #whamg
 /public/home/baoqi/software/wham/bin/whamg -x 6 -a ~/PGG_netwon/04_result/00_backone_genome/backone.fa -f $id > ${id}.whamg.bcf
