@@ -75,11 +75,16 @@ python /public/home/baoqi/software/manta-1.6.0.centos6_x86_64/bin/configManta.py
 python manta_${id}/runWorkflow.py  -m local -j 16
 done
 
-
-
+#processed the vcf got from vg
+ls *vcf | while read id;
+do
+bcftools norm --threads 16 -m -both $id -o ${id}.split.vcf
+done
+ls *split.vcf |while read id;do python ../../extract_sv_len50.py $id > ${id}.indel50.vcf;done
+ls *indel50.vcf | while read id;do vcftools --out ${id}.biallel --min-alleles 2 --max-alleles 2 --vcf $id --recode --recode-INFO-all;done
 ls *gz | while read id;do gunzip $id ;done
 ls *recode.vcf | while read id;do bcftools +fill-tags $id -o ${id}.1.vcf -- -t AC;done
-ls *vcf | while read id;do bcftools view  -e "AC==0"  $id -o ${id}.filtedAC.vcf;done
+ls *1.vcf | while read id;do bcftools view  -e "AC==0"  $id -o ${id}.filtedAC.vcf;done
 ls *filtedAC.vcf | while read id;do bgzip -@ 8 $id ;done
 ls *gz | while read id;do tabix -f  $id ;done
 
