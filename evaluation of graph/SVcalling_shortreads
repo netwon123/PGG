@@ -75,6 +75,14 @@ python /public/home/baoqi/software/manta-1.6.0.centos6_x86_64/bin/configManta.py
 python manta_${id}/runWorkflow.py  -m local -j 16
 done
 
+
+
+ls *gz | while read id;do gunzip $id ;done
+ls *recode.vcf | while read id;do bcftools +fill-tags $id -o ${id}.1.vcf -- -t AC;done
+ls *vcf | while read id;do bcftools view  -e "AC==0"  $id -o ${id}.filtedAC.vcf;done
+ls *filtedAC.vcf | while read id;do bgzip -@ 8 $id ;done
+ls *gz | while read id;do tabix -f  $id ;done
+
 #compared two vcf 
 ls *indel50.vcf | while read id; do bcftools view --exclude 'GT="0/0" || GT="0" || GT="."' $id | bcftools norm -f ~/PGG_netwon/final_merge/backone_genome/backone.fa | bcftools sort > ${id}.noref.vcf;done
 ls *noref.vcf | while read id;do bgzip -@ 8 $id;done
