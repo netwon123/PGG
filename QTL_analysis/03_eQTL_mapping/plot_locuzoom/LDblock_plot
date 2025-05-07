@@ -1,0 +1,5 @@
+python skip_indel.py region_SNP-12_59170897.vcf region_SNP-12_59170897_skip.vcf
+
+LDBlockShow -InVCF  region_SNP-12_59170897_skip.vcf  -OutPut example_ENSSSCG00000036776 -Region 12:58251990-59170899 -SeleVar 2
+
+ShowLDSVG -InPreFix example_ENSSSCG00000004956 -SpeSNPName snp.txt -OutPut example_ENSSSCG00000004956_yh -OutPdf
