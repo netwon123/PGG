@@ -14,10 +14,13 @@ def main(vcf_file):
                 ref = fields[3]
                 alt = fields[4]
                 indel_length = abs(len(ref) - len(alt))
-                # Check if it's a sv
-                if len(ref) != len(alt) and indel_length > 49:
-                    print(line.strip())
 
+                if len(ref) == 1 and len(alt) > 49:
+                    # Insertion (ref is length 1, alt length > 49)
+                    print(line.strip())
+                elif len(alt) == 1 and len(ref) > 49:
+                    # Deletion (alt is length 1, ref length > 49)
+                    print(line.strip())
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
