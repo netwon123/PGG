@@ -1,0 +1,14 @@
+[[annotation]]
+file="gene_all.bed.gz"
+names=["chrom", "start", "stop","gene"]
+columns=[1,2,3,4]
+ops=["first", "first", "first", "first"]
+
+
+
+[[annotation]]
+file="feature_v113.bed.gz"
+names=["chrom", "start", "stop","feature"]
+columns=[1,2,3,4]
+ops=["first", "first", "first", "first"]
+
