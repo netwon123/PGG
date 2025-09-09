@@ -23,3 +23,7 @@ tabix -p bed merge.sort.bed
 
 #https://github.com/brentp/vcfanno
 vcfanno -ends conf.toml query.vcf.gz > query_anno.vcf
+
+
+#extact the info
+python extract_svlen.py panel_sv_anno.vcf panel_sv_anno.txt --extra-info-keys gene,feature
