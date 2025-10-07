@@ -15,9 +15,9 @@ i=${i/_R1.clean.fq.gz/}
 done
 
 #split the mutil-allele
-ls *gz | while read id;
+ls *vcf | while read id;
 do
-bcftools norm --threads 16 -m -both $id -Oz -o ${id}.split.vcf.gz
+bcftools norm --threads 16 -m -both $id -o ${id}.split.vcf
 done
 
 #extract and annotate the sv
