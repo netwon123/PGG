@@ -1,7 +1,18 @@
-#mapping and genotype SV
-/public/software/singularity/bin/singularity exec --nv --network=none -n ~/vg_v1.51.0.sif vg giraffe -t 16 -Z /public/home/baoqi/PGG_netwon/final_merge/PGG.giraffe.gbz -m /public/home/baoqi/PGG_netwon/final_merge/PGG.min -d /public/home/baoqi/PGG_netwon/final_merge/PGG.dist  -f 88_1_clean.fq.gz -f 88_2_clean.fq.gz > 88_vg-pan.gam
-/public/software/singularity/bin/singularity exec --nv --network=none -n ~/vg_v1.51.0.sif vg pack -t 16 -x /public/home/baoqi/PGG_netwon/final_merge/PGG.giraffe.gbz -g 88_vg-pan.gam -o 88_vg-pan.pack
-/public/software/singularity/bin/singularity exec --nv --network=none -n ~/vg_v1.51.0.sif vg call -t 16 -r /public/home/baoqi/PGG_netwon/final_merge/PGG.snarls -z  /public/home/baoqi/PGG_netwon/final_merge/PGG.giraffe.gbz -a -k 88_vg-pan.pack -s 88 >88_vg-pan.vcf
+ls ./*_f1.fq.gz | while read i;
+do
+i=${i/_f1.fq.gz/}
+fastp -w 56 -i ${i}_f1.fq.gz -o ${i}_R1.clean.fq.gz -I ${i}_r2.fq.gz -O ${i}_R2.clean.fq.gz
+done
+
+
+
+ls ./*_R1.clean.fq.gz | while read i;
+do
+i=${i/_R1.clean.fq.gz/}
+/public/software/arm/vg1.56/vg-v1.56.0/bin/vg giraffe --fragment-mean 200  --fragment-stdev 28 -t 96 -Z /public/home/baoqi/PGG/PGG.giraffe.gbz -m /public/home/baoqi/PGG/PGG.min -d /public/home/baoqi/PGG/PGG.dist  -f ${i}_R1.clean.fq.gz -f ${i}_R2.clean.fq.gz > ${i}-pan.gam
+/public/software/arm/vg1.56/vg-v1.56.0/bin/vg pack -t 96 -x /public/home/baoqi/PGG/PGG.giraffe.gbz -g ${i}-pan.gam -o ${i}-pan.pack
+/public/software/arm/vg1.56/vg-v1.56.0/bin/vg call -t 96 -r /public/home/baoqi/PGG/PGG.snarls -z  /public/home/baoqi/PGG/PGG.giraffe.gbz -a -k ${i}-pan.pack -s ${i} >${i}-pan.vcf
+done
 
 #split the mutil-allele
 ls *gz | while read id;
